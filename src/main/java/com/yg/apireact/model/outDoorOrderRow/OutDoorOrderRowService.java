@@ -24,7 +24,7 @@ public class OutDoorOrderRowService {
 			for (OutDoorOrderRow b : rows) {
 				if (!result.equals("")) result = (result + ", ").trim();
 				result = (result + b.getProduct().getName()).trim()+" р."+b.getSize().trim();
-				if (result.length() >= 15) {
+				if (result.length() >= 25) {
 					result = result+"...";
 					    break;
 					  }

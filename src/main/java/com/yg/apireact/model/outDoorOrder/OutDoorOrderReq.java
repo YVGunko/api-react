@@ -19,7 +19,9 @@ public class OutDoorOrderReq {
 	
 	@JsonProperty("customer_id")
 	public String customer_id ;
-
+	@JsonProperty("customer_name")
+	public String customer_name ;
+	
 	@JsonProperty("division_code")
 	public String division_code ;	
 	@JsonProperty("division_name")
@@ -39,7 +41,8 @@ public class OutDoorOrderReq {
 	
  	public static OutDoorOrderReq outDoorOrderToOutDoorOrderReq (OutDoorOrder b) {
  		return new OutDoorOrderReq(b.getId(), b.getComment(), "",
- 				b.getCustomer().getId(), b.getDivision().getCode(), b.getDivision().getName(),  
+ 				b.getCustomer().getId(), b.getCustomer().getName(),
+ 				b.getDivision().getCode(), b.getDivision().getName(),  
  				String.valueOf(b.getUser().getId()), b.getUser().getName(), 
  				b.getSample(), b.getDate());		
  	}
@@ -51,13 +54,14 @@ public class OutDoorOrderReq {
 		super();
 	}
 
-	public OutDoorOrderReq(String id, String comment, String details, String customer_id, String division_code,
+	public OutDoorOrderReq(String id, String comment, String details, String customer_id, String customer_name, String division_code,
 			String division_name, String user_id, String user_name, Boolean sample, Date date) {
 		super();
 		this.id = id;
 		this.comment = comment;
 		this.details = details;
 		this.customer_id = customer_id;
+		this.customer_name = customer_name;
 		this.division_code = division_code;
 		this.division_name = division_name;
 		this.user_id = user_id;
@@ -143,5 +147,11 @@ public class OutDoorOrderReq {
 	}
 	public void setUser_name(String user_name) {
 		this.user_name = user_name;
+	}
+	public String getCustomer_name() {
+		return customer_name;
+	}
+	public void setCustomer_name(String customer_name) {
+		this.customer_name = customer_name;
 	}
 }

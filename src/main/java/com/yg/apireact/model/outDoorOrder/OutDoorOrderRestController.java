@@ -72,7 +72,7 @@ public class OutDoorOrderRestController {
 				// String id, String sDate, String sClient, String sDivision, String sDesc,
 				// String sUser
 				responce.add(new OutDoorOrderReq(b.getId(), b.getComment(), rowService.getGoods(b.getId()),
-						b.getCustomer().getId(), b.getDivision().getCode(), b.getDivision().getName(),
+						b.getCustomer().getId(), b.getCustomer().getName(), b.getDivision().getCode(), b.getDivision().getName(),
 						String.valueOf(b.getUser().getId()), b.getUser().getName(), b.getSample(), b.getDate()));
 			}
 
@@ -95,7 +95,7 @@ public class OutDoorOrderRestController {
 		try {
 			OutDoorOrder b = repo.findById(id).orElseThrow();
 			OutDoorOrderReq response =  new OutDoorOrderReq(b.getId(), b.getComment(), rowService.getGoods(b.getId()),
-	   				b.getCustomer().getId(), b.getDivision().getCode(), b.getDivision().getName(),  
+	   				b.getCustomer().getId(), b.getCustomer().getName(), b.getDivision().getCode(), b.getDivision().getName(),  
 	 				String.valueOf(b.getUser().getId()), b.getUser().getName(), 
 	 				b.getSample(), b.getDate());
 			return new ResponseEntity<>(response, HttpStatus.OK);
