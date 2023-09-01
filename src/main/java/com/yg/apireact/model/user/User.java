@@ -78,9 +78,9 @@ public class User implements UserDetails {
 		this.external = external;
 	}
 	@Size(min=5, message = "Не меньше 5 знаков")
-	private String password;
+	private  @JsonIgnore String password;
     @Transient
-    private String passwordConfirm;
+    private  @JsonIgnore String passwordConfirm;
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;

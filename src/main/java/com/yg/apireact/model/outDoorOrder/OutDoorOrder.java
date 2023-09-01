@@ -2,6 +2,7 @@ package com.yg.apireact.model.outDoorOrder;
 
 import java.util.Date;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
@@ -11,13 +12,23 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
+
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.yg.apireact.model.user.User;
 import com.yg.apireact.model.customer.Customer;
 import com.yg.apireact.model.division.Division;
 
+import com.yg.apireact.model.outDoorOrderRow.OutDoorOrderRowService;
+
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 public class OutDoorOrder {
+	
 	@Access(AccessType.PROPERTY) @Id private String id;
 	private String comment;
 	private Boolean sample;
@@ -61,16 +72,28 @@ public class OutDoorOrder {
 	}
 	
 	public OutDoorOrder(String id, String comment, Date date,  
-			String division_code, Long idUser, String client_id, Boolean sample) {
+			Division division, User user, Customer client, Boolean sample) {
 		super();
 		this.id = id;
-		this.user = new User (idUser);
+		this.user = user;
 		this.comment = comment;
 		this.date = date;
 		this.receivedFromMobileDate = new Date();
-		this.division = new Division (division_code);
-		this.client = new Customer (client_id);
+		this.division = division;
+		this.client = client;
 		this.sample = sample;
+	}
+	
+	public OutDoorOrder(String id, Long idUser, String client_id) {
+		super();
+		this.id = id;
+		this.user = new User (idUser);
+		this.comment = "";
+		this.date = new Date();
+		this.receivedFromMobileDate = new Date();
+		this.division = new Division ("0");
+		this.client = new Customer (client_id);
+		this.sample = false;
 	}
 	
 	public Boolean getSample() {
@@ -133,4 +156,5 @@ public class OutDoorOrder {
 	public OutDoorOrder() {
 		super();
 	}
+	
 }

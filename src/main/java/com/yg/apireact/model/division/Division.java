@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
@@ -16,10 +17,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class Division {
 	@Access(AccessType.PROPERTY)
 	@Id
-	String code;
+	@JsonProperty("division_code")
+	private String code;
 
 	@NotNull
-	String name;
+	@JsonProperty("division_name")
+	private String name;
 	
 	public Division() {
 		super();

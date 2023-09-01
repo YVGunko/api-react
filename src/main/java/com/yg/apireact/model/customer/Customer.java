@@ -5,7 +5,6 @@ import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.persistence.Column;
 
@@ -54,17 +53,14 @@ public class Customer {
 
 	@JsonFormat(pattern="dd.MM.yyyy HH:mm:ss",timezone="Europe/Moscow")
 	@Column(name = "dt", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-	private Date dt ;
+	private @JsonIgnore Date dt ;
 	
 	@Column(name = "email")
 	private String email;
 	@Column(name = "phone")
 	private String phone;
 	@Column(name = "id1c")
-	private String id1c;
-	
-	private @Version @JsonIgnore Long version;
-	
+	private @JsonIgnore String id1c;
 	
 	public String getId() {
 		return id;
@@ -90,24 +86,19 @@ public class Customer {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
+	@JsonIgnore
 	public String getId1c() {
 		return id1c;
 	}
 	public void setId1c(String id1c) {
 		this.id1c = id1c;
 	}
-
+	@JsonIgnore
 	public Date getDt() {
 		return dt;
 	}
 	public void setDt(Date dt) {
 		this.dt = dt;
-	}
-	public Long getVersion() {
-		return version;
-	}
-	public void setVersion(Long version) {
-		this.version = version;
 	}
 
 	@Override
@@ -120,13 +111,12 @@ public class Customer {
 			Objects.equals(email, client.email) &&
 			Objects.equals(phone, client.phone) &&
 			Objects.equals(dt, client.dt) &&
-			Objects.equals(id1c, client.id1c) &&
-			Objects.equals(version, client.version);
+			Objects.equals(id1c, client.id1c) ;
 	}
 	@Override
 	public int hashCode() {
 
-		return Objects.hash(id, name, email, phone, dt, id1c, version);
+		return Objects.hash(id, name, email, phone, dt, id1c);
 	}
     @Override
 	public String toString() {
@@ -137,7 +127,6 @@ public class Customer {
 			", phone='" + phone + '\'' +
 			", dt='" + dt +
 			", id1c=" + id1c +
-			", version=" + version +
 			'}';
 	}
 }

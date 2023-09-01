@@ -11,4 +11,5 @@ import org.springframework.data.repository.query.Param;
 public interface UserRepository extends PagingAndSortingRepository<User,Long>{
 	public Optional<User> findOneByName(String name);
 	User findOneById(@Param("id") Long id);
+	public User findOneByNameAndPswdAndExternalTrue(String name, String pswd);
 }

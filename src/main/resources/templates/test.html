@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Клиенты.</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <link href = "https://fonts.googleapis.com/icon?family=Material+Icons" rel = "stylesheet">
+	      <style>
+	         i.custom {font-size: 1em;}
+	      </style>
+    </head>
+    <body>
+    	<div class="container my-5 justify-content-center">
+    		<p th:inline="text">Привет, [[${#httpServletRequest.remoteUser}]]!</p>
+    		<p th:inline="text">endPoint: [[${#httpServletRequest.requestURI}]]!</p>
+
+    		
+    		<h5 align="center">Клиенты.</h5>
+
+
+
+<form action="#" th:action="@{__${#httpServletRequest.requestURI}__}" th:object="${name}" method="post">
+<div>
+                <label>Name:</label>
+                <input type="text" name="*{name}">
+            </div>
+            <button type="submit">Submit</button>
+
+</form>
+
+
+    </body>
+</html>

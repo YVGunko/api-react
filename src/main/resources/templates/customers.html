@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Клиенты.</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <link href = "https://fonts.googleapis.com/icon?family=Material+Icons" rel = "stylesheet">
+	      <style>
+	         i.custom {font-size: 1em;}
+	      </style>
+    </head>
+    <body>
+    	<div class="container my-5 justify-content-center">
+    		<p th:inline="text">Привет, [[${#httpServletRequest.remoteUser}]]!</p>
+    		<p th:inline="text">endPoint: [[${#httpServletRequest.requestURI}]]!</p>
+
+    		
+    		<h5 align="center">Клиенты.</h5>
+
+       	<div th:switch="${customer}" class="container-fluid">				
+            <div class="row">
+                <div class="col-md-auto">
+                    <h2 th:case="null">Список пуст!</h2>
+                    <div th:case="*">
+
+<form action="#" th:action="@{__${#httpServletRequest.requestURI}__}" th:object="${customerFilter}" method="post">
+<br>   	
+	<hr>
+	<div class="navbar-form col-md-6 col-sm-12">
+		<label  style="display: inline-block; vertical-align: middle">
+	       <input style="vertical-align: middle" class="form-control-sm" type="text" th:field="*{name}" title="Фильтр по наименованию"/> 
+	       <button type="submit" name="action" value="filter" class="btn btn-primary btn-sm material-icons custom">search</button>		       
+
+	       <button style="vertical-align: middle" type="submit" name="action" value="Filter" 
+	       title ="Отфильтровать" class="btn btn-primary btn-sm material-icons custom" role="button">search</button>
+	       <a style="vertical-align: middle" href="/newCustomer" class="btn btn-success"  role="button">
+			<i style="vertical-align: middle" class="material-icons custom" title ="Добавить строку прайса">add</i></a>		       
+       </label>
+	</div>
+
+</form>
+                        <table class="table table-striped table-responsive-md text-nowrap">
+                            <thead>
+                                <tr>
+			                        <th>Наименование</th>
+			                        <th></th>
+			                        <th></th>
+			                        <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="p : ${customer}">
+				                    <td th:text="${#strings.toUpperCase(p.name)}"></td>
+									<td >
+										<a th:href="@{/editCustomer/{id}(id=${p.id})}" class="btn btn-primary btn-sm">
+										<i class="material-icons custom" aria-hidden="true" title ="Редактировать данные клиента">mode_edit</i></a>
+									</td>
+									<td >
+										<a th:href="@{/customerOrders/{id}(id=${p.id})}" class="btn btn-primary btn-sm">
+										<i class="material-icons custom" aria-hidden="true" title ="Открыть заказы клиента">visibility</i></a>
+									</td>
+									<td >
+										<a th:href="@{/newCustomerOrder/{id}(id=${p.id})}" class="btn btn-primary btn-sm">
+										<i class="material-icons custom" aria-hidden="true" title ="Создать новый заказ">mode_edit</i></a>
+									</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>                      
+                </div>
+            </div>
+
+           </div> 
+		
+		</div>	<!-- container -->
+    </body>
+</html>

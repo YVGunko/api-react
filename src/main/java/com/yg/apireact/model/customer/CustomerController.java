@@ -1,168 +1,116 @@
 package com.yg.apireact.model.customer;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.Map;
 
-import javax.validation.Valid;
+import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.servlet.ModelAndView;
 
+@RequestMapping(path = {CustomerController.PATH,CustomerController.PATH_PAGENATED})
 
-
-@RestController
-//we allow cors requests from our frontend environment
-//note the curly braces that creates an array of strings ... required by the annotation
-@CrossOrigin(
-		origins =  {"http://localhost:4232", "http://localhost:3000"}, 
-		methods = {RequestMethod.GET, 
-				RequestMethod.OPTIONS,
-				RequestMethod.POST, 
-				RequestMethod.PUT,
-				RequestMethod.DELETE,
-				RequestMethod.PATCH,
-				RequestMethod.HEAD})
-@RequestMapping("/api/customers")
+@Controller
 public class CustomerController {
+	protected static final String PATH = "/order/edit/customers";
+	protected static final String PATH_PAGENATED = "/order/edit/customers/page/{page-number}";
+	
+	public static CustomerFilter customerFilter;
 	private static final Logger log = LoggerFactory.getLogger(CustomerController.class);
 
 	@Autowired
 	CustomerService customerService;
 	@Autowired
 	CustomerRepository customerRepository;
-	  
-  @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<List<Customer>> getAllTutorials(
-	        @RequestParam(required = false) String title,
-	        @RequestParam(defaultValue = "0") int page,
-	        @RequestParam(defaultValue = "10") int size
-	      ) {
-
-	    try {
-	      //List<Customer> tutorials = new ArrayList<Customer>();
-	      Pageable paging = PageRequest.of(page, size);
-	      
-	      Page<Customer> pageTuts;
-	      if (title == null)
-	        pageTuts = customerRepository.findAll(paging);
-	      else
-	        pageTuts = customerRepository.findByNameContaining(title, paging);
 	
-	      List<Customer> cus = pageTuts.getContent();
-	
-	      /*Map<String, Object> response = new HashMap<>();
-	      response.put("customers", tutorials);*/
-	      //response.put("currentPage", pageTuts.getNumber());
-	      //response.put("totalItems", pageTuts.getTotalElements());
-	      //response.put("totalPages", pageTuts.getTotalPages());
-	
-	      return new ResponseEntity<>(cus, HttpStatus.OK);
-	    } catch (Exception e) {
-	      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-	    }
+	@GetMapping
+	public ModelAndView get(@RequestParam(value = "page", required = false) Integer pageNumber,
+			@ModelAttribute("customerFilter") CustomerFilter customerFilter) throws ParseException {
+		
+		ServletRequestAttributes attributes = 
+		        (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+		HttpSession session = attributes.getRequest().getSession(true);
+		
+		if (pageNumber == null) pageNumber = 1;
+		
+		return mavPost(pageNumber, customerFilter);
+		//return mavPost(pageNumber, "", customerFilter);
 	}
-
-	@CrossOrigin(origins =  {"http://localhost:3000"}, methods = {RequestMethod.GET, RequestMethod.OPTIONS})
-	@RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Customer> getCustomerById(@PathVariable("id") String id) {
+	
+	/*@RequestMapping(value={"/newCustomer"}, method=RequestMethod.POST)
+	public ModelAndView mavOpen(@RequestParam(value = "page", required = false) Integer page,
+			@ModelAttribute("customerFilter") CustomerFilter customerFilter) throws ParseException {
+		
+			ModelAndView mv = new ModelAndView();
+			return mv;
+	}*/
+	
+	//@RequestMapping(value={""}, method=RequestMethod.POST, params={"action"})
+	//@PostMapping(params={"filter"})
+	@PostMapping(params={"action=filter"})
+	public ModelAndView mavPost(@RequestParam(value = "page", required = false, defaultValue = "1" ) Integer page,
+			//@ModelAttribute ("customer") List<Customer> customer, 
+	        //@RequestParam(value="action", required=true) String action,
+				@ModelAttribute("customerFilter") CustomerFilter customerFilter) throws ParseException {
+		
+		ModelAndView mv = new ModelAndView();
+		
 		try {
-			return new ResponseEntity<>(customerRepository.findById(id)
-					.orElseThrow(() -> new NoSuchElementException("Customer not found exception. id=".concat(id))),
-					HttpStatus.OK);
-	    } catch (NoSuchElementException e) {
-	    	log.error("Customer not found exception. id=".concat(id));
-	      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-	    }
-	
+		      //TODO size !
+		      Pageable paging = PageRequest.of(page - 1, 10);
+		      
+		      Page<Customer> pageTuts;
+		      if (StringUtils.isEmpty(customerFilter.getName()))
+		        pageTuts = customerRepository.findAll(paging);
+		      else
+		        pageTuts = customerRepository.findByNameContainingOrderByName(customerFilter.getName(), paging);
+		
+		      List<Customer> cus = pageTuts.getContent();
+		
+			ServletRequestAttributes attributes = 
+			        (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+			HttpSession session = attributes.getRequest().getSession(true);
+			session.setAttribute("customerFilter",
+					String.valueOf(customerFilter));
+			
+			mv.addObject("currentPage", page);
+			mv.addObject("totalPages", pageTuts.getTotalPages());
+			mv.addObject("totalItems", pageTuts.getTotalElements());
+			
+			if (customerFilter.getName() == null) customerFilter.setName("");
+			mv.addObject("customerFilter", customerFilter);
+			mv.addObject("customer", cus);
+			
+		} catch (Exception e) {
+			if (customerFilter.getName() == null) customerFilter.setName("");
+			mv.addObject("currentPage", 1);
+			mv.addObject("totalPages", 0);
+			mv.addObject("totalItems", 0l);
+			mv.addObject("customerFilter", customerFilter);
+			mv.addObject("customer", new ArrayList<>());
+		}
+		mv.setViewName("customers");
+		return mv;
 	}
-	
-	@CrossOrigin(origins =  {"http://localhost:3000"}, methods = {RequestMethod.DELETE, RequestMethod.OPTIONS})
-	@RequestMapping(value = "{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> delete(@PathVariable String id) {
-		  try {
-			  customerRepository.deleteById(id); 
-			  return ResponseEntity.noContent().build();        
-		  } catch (EmptyResultDataAccessException e){
-			  return ResponseEntity.notFound().build();
-		  } 
-	}
 
-    @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Customer> saveCustomer(@RequestBody @Valid Customer customer) {
-        HttpHeaders headers = new HttpHeaders();
-
-        if (customer == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        try {
-        	return new ResponseEntity<>(this.customerService.saveOrUpdate(customer), headers, HttpStatus.CREATED);
-        } catch (RuntimeException e) {
-        	return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-  	    }
-    }
-    
-    @CrossOrigin(origins =  {"http://localhost:3000"}, methods = {RequestMethod.PATCH, RequestMethod.OPTIONS})
-    @RequestMapping(value = "id", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Customer> patchCustomer(@RequestBody @Valid Customer customer, UriComponentsBuilder builder) {
-        HttpHeaders headers = new HttpHeaders();
-
-        if (customer == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        try {
-        	return new ResponseEntity<>(this.customerService.saveOrUpdate(customer), headers, HttpStatus.OK);
-        } catch (RuntimeException e) {
-        	return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-  	    }
-    }
-
-	
-	/* Order */
-	@CrossOrigin(origins =  {"http://localhost:3000"}, methods = {RequestMethod.GET})
-	@GetMapping("/api/customers/listOrder/{id}")
-	public ResponseEntity<ArrayList<Customer>> getListOrderById(@PathVariable String id) {
-		//TODO
-		try {
-			ArrayList<Customer> response = (ArrayList<Customer>) customerRepository.findAll();
-			return new ResponseEntity<>(response, HttpStatus.OK);
-	    } catch (Exception e) {
-	      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-	    }
-	}
-	
-	@CrossOrigin(origins =  {"http://localhost:3000"}, methods = {RequestMethod.POST, 
-			RequestMethod.PUT, 
-			RequestMethod.PATCH})
-	@PostMapping("/api/customers/newOrder")
-	public ResponseEntity<ArrayList<Customer>> getNewOrderById() {
-		//TODO
-		try {
-			ArrayList<Customer> response = (ArrayList<Customer>) customerRepository.findAll();
-			return new ResponseEntity<>(response, HttpStatus.OK);
-	    } catch (Exception e) {
-	      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-	    }
-	}
 }
