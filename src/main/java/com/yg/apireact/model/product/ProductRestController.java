@@ -21,7 +21,7 @@ import com.yg.apireact.Constants;
 //we allow cors requests from our frontend environment
 //note the curly braces that creates an array of strings ... required by the annotation
 @CrossOrigin(
-		origins =  {Constants.ORIGINS}, 
+		origins =  {"http://localhost:8082", "http://localhost:3000"}, 
 		methods = {RequestMethod.GET, 
 				RequestMethod.OPTIONS,
 				RequestMethod.POST, 
@@ -36,7 +36,7 @@ public class ProductRestController {
 	@Autowired
 	ProductService service;
 	
-	@CrossOrigin(origins =  {Constants.ORIGINS}, methods = {RequestMethod.GET, RequestMethod.OPTIONS})
+	@CrossOrigin(origins =  {"http://localhost:8082", "http://localhost:3000"}, methods = {RequestMethod.GET, RequestMethod.OPTIONS})
 	@RequestMapping(value = "/v100", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Product>> getTop100Products(
 			@RequestParam(name = "division_code", required = true) String divisionCode,
@@ -45,7 +45,7 @@ public class ProductRestController {
 			return service.find (divisionCode, productName);
 	
 	}
-	@CrossOrigin(origins =  {Constants.ORIGINS}, methods = {RequestMethod.GET, RequestMethod.OPTIONS})
+	@CrossOrigin(origins =  {"http://localhost:8082", "http://localhost:3000"}, methods = {RequestMethod.GET, RequestMethod.OPTIONS})
 	@RequestMapping(value = "/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Product>> getAll(
 			@RequestParam(name = "division_code", required = true) String divisionCode) {

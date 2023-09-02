@@ -20,7 +20,7 @@ import com.yg.apireact.model.customer.CustomerRestController;
 
 @RestController
 @CrossOrigin(
-		origins =  {Constants.ORIGINS}, 
+		origins =  {"http://localhost:8082", "http://localhost:3000"}, 
 		methods = {RequestMethod.GET, 
 				RequestMethod.OPTIONS,
 				RequestMethod.POST, 
@@ -37,7 +37,7 @@ public class UserRestController {
         this.userRepository = userRepository;
     }
     
-	@CrossOrigin(origins =  {Constants.ORIGINS}, methods = {RequestMethod.GET, RequestMethod.OPTIONS})
+	@CrossOrigin(origins =  {"http://localhost:8082", "http://localhost:3000"}, methods = {RequestMethod.GET, RequestMethod.OPTIONS})
 	@RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<User> getOneById(@PathVariable("id") Long id) {
 		try {

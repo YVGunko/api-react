@@ -18,7 +18,7 @@ import com.yg.apireact.Constants;
 //we allow cors requests from our frontend environment
 //note the curly braces that creates an array of strings ... required by the annotation
 @CrossOrigin(
-		origins =  {Constants.ORIGINS}, 
+		origins =  {"http://localhost:8082", "http://localhost:3000"}, 
 		methods = {RequestMethod.GET, 
 				RequestMethod.OPTIONS,
 				RequestMethod.POST, 
@@ -30,7 +30,7 @@ import com.yg.apireact.Constants;
 public class FilialRestController {
 	@Autowired FilialRepository repo;
 	
-	@CrossOrigin(origins =  {Constants.ORIGINS}, methods = {RequestMethod.GET, RequestMethod.OPTIONS})
+	@CrossOrigin(origins =  {"http://localhost:8082", "http://localhost:3000"}, methods = {RequestMethod.GET, RequestMethod.OPTIONS})
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Filial>> getFilials() {
 	
