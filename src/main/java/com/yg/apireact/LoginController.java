@@ -52,7 +52,10 @@ public class LoginController {
         try {
         	
         	User user = this.userRepository.findOneByNameAndPswdAndExternalTrue(userToken.getName(), userToken.getPswd());
-
+			if (user == null) {
+				log.debug("LoginController -> basicLogin -> No user found.");
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
         	userToken.setId(user.getId());
         	userToken.setPswd("***");
         	userToken.setRoles(user.getRoles().stream().map(Role::getName).collect(Collectors.joining(",")));

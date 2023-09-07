@@ -103,14 +103,26 @@ public class OutDoorOrderRestController {
 	      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
 	}
+
+	@CrossOrigin(origins =  {"http://localhost:8082", "http://localhost:3000"}, methods = {RequestMethod.POST})
+	@RequestMapping(value = "", method = {RequestMethod.POST}, produces = MediaType.APPLICATION_JSON_VALUE)
+
+	public ResponseEntity<OutDoorOrderReq> post (@RequestBody OutDoorOrderReq request) {
+		try {
+			OutDoorOrderReq response = service.saveOrUpdate(request);
+			return new ResponseEntity<>(response, HttpStatus.OK);
+	    } catch (Exception e) {
+	      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
+	}
 	
-	@CrossOrigin(origins =  {"http://localhost:8082", "http://localhost:3000"}, methods = {RequestMethod.POST, 
+	@CrossOrigin(origins =  {"http://localhost:8082", "http://localhost:3000"}, methods = {
 			RequestMethod.PUT, 
 			RequestMethod.PATCH})
-	@RequestMapping(value = "", method = {RequestMethod.POST, RequestMethod.PUT, 
+	@RequestMapping(value = "{id}", method = {RequestMethod.PUT, 
 			RequestMethod.PATCH }, produces = MediaType.APPLICATION_JSON_VALUE)
 
-	public ResponseEntity<OutDoorOrderReq> SaveOrUpdate(@RequestBody OutDoorOrderReq request) {
+	public ResponseEntity<OutDoorOrderReq> putPatch(@RequestBody OutDoorOrderReq request) {
 		try {
 			OutDoorOrderReq response = service.saveOrUpdate(request);
 			return new ResponseEntity<>(response, HttpStatus.OK);

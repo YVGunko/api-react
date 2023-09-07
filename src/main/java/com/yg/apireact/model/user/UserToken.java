@@ -1,5 +1,8 @@
 package com.yg.apireact.model.user;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class UserToken {
@@ -41,4 +44,12 @@ public class UserToken {
 	public void setRoles(String roles) {
 		this.roles = roles;
 	}
+	
+ 	public static UserToken userToUserToken (User b) {
+ 		return new UserToken(b.getId(), b.getName(), "***", 
+ 				b.getRoles().stream().map(Role::getName).collect(Collectors.joining(",")));		
+ 	}
+ 	public static List<UserToken> userToUserToken (List<User> listUser) {
+ 		return listUser.stream().map(b -> userToUserToken(b)).collect(Collectors.toList());		
+ 	}
 }

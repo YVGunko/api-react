@@ -69,7 +69,21 @@ public class OutDoorOrderReq {
 		this.sample = sample;
 		this.date = date;
 	}
-	
+	public OutDoorOrderReq(String id, String comment, String details, String customer_id, String customer_name, String division_code,
+			String division_name, String user_id, String user_name, Boolean sample, String date) {
+		super();
+		this.id = id;
+		this.comment = comment;
+		this.details = details;
+		this.customer_id = customer_id;
+		this.customer_name = customer_name;
+		this.division_code = division_code;
+		this.division_name = division_name;
+		this.user_id = user_id;
+		this.user_name = user_name;
+		this.sample = sample;
+		this.date = new Date();
+	}
 	public OutDoorOrderReq(String id, String comment, String user_id, String customer_id, String division_code, Boolean sample) {
 		super();
 		this.id = id;
