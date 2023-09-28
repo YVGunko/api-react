@@ -39,15 +39,15 @@ public class OutDoorOrderReq {
 	@JsonFormat(pattern="dd.MM.yyyy HH:mm:ss",timezone="Europe/Moscow")
 	Date date ;
 	
- 	public static OutDoorOrderReq outDoorOrderToOutDoorOrderReq (OutDoorOrder b) {
+ 	public static OutDoorOrderReq orderToOrderReq (OutDoorOrder b) {
  		return new OutDoorOrderReq(b.getId(), b.getComment(), "",
  				b.getCustomer().getId(), b.getCustomer().getName(),
  				b.getDivision().getCode(), b.getDivision().getName(),  
  				String.valueOf(b.getUser().getId()), b.getUser().getName(), 
  				b.getSample(), b.getDate());		
  	}
- 	public static List<OutDoorOrderReq> outDoorOrderToOutDoorOrderReq (List<OutDoorOrder> listOfOutDoorOrder) {
- 		return listOfOutDoorOrder.stream().map(b -> outDoorOrderToOutDoorOrderReq(b)).collect(Collectors.toList());		
+ 	public static List<OutDoorOrderReq> orderToOrderReq (List<OutDoorOrder> listOfOutDoorOrder) {
+ 		return listOfOutDoorOrder.stream().map(b -> orderToOrderReq(b)).collect(Collectors.toList());		
  	}
  	
 	public OutDoorOrderReq() {

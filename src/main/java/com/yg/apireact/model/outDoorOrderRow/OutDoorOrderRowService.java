@@ -2,99 +2,80 @@ package com.yg.apireact.model.outDoorOrderRow;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.yg.apireact.model.outDoorOrder.OutDoorOrder;
 import com.yg.apireact.model.outDoorOrder.OutDoorOrderRepository;
 
 @Service
 public class OutDoorOrderRowService {
+	private static final Logger log = LoggerFactory.getLogger(OutDoorOrderRowService.class);
 
 	@Autowired
 	OutDoorOrderRowRepository repository;
-	
+
 	@Autowired
 	OutDoorOrderRepository orderRepository;
-	public String getGoods (String order_id) {
+
+	public String getGoods(String order_id, int length) {
 		List<OutDoorOrderRow> rows = new ArrayList<>();
 		String result = "";
 		rows = repository.findByOutDoorOrderIdOrderByDtAsc(order_id);
 		if (rows != null) {
 			for (OutDoorOrderRow b : rows) {
-				if (!result.equals("")) result = (result + ", ").trim();
-				result = (result + b.getProduct().getName()).trim()+" р."+b.getSize().trim();
-				if (result.length() >= 25) {
-					result = result+"...";
-					    break;
-					  }
+				if (!result.equals(""))
+					result = (result + ", ").trim();
+				result = (result + b.getProduct().getName()).trim() + " р." + b.getSize().trim();
+				if (result.length() >= length) {
+					result = result + "...";
+					break;
+				}
 			}
 		}
 		return result;
 	}
-	/*
+
 	public OutDoorOrderRowReq saveOrUpdate(OutDoorOrderRowReq request) throws Exception {
-		OutDoorOrder outDoorOrder = orderRepository.findOneById(request.order_id);
-		if (outDoorOrder == null)
-			throw new Exception("Error while saving OutDoorOrderRow with id= " + request.id + ", no OutDoorOrder with id= " + request.order_id);
 
-		// OutDoorOrder (String id, String comment, Date date, 
-		// String division_code, Long idUser, String clientId)
-		OutDoorOrderRow tmp = repository.save(new OutDoorOrderRow(request.id, 
-				new OutDoorOrder (outDoorOrder.id, outDoorOrder.getComment(), outDoorOrder.getDate(), 
-						outDoorOrder.division.getCode(), outDoorOrder.user.getId(), outDoorOrder.client.getId(), outDoorOrder.getSample()), 
-					(!(request.attribute == null)) ? request.attribute : "", 
-						(!(request.number == null)) ? request.number : 0,
-							(!(request.barcode == null)) ? request.barcode : "",
-				(!(request.product_id == null)) ? request.product_id : "0", 
-						request.size, 
-					(!(request.color_id == null)) ? request.color_id : "0", 
-						(!(request.liner_id == null)) ? request.liner_id : "0", 
-							(!(request.rant_id == null)) ? request.rant_id : "0", 
-								(!(request.shpalt_id == null)) ? request.shpalt_id : "0",
-										
-					(!(request.vstavka_id == null)) ? request.vstavka_id : "0",
-						(!(request.gelenok_id == null)) ? request.gelenok_id : "0",
-							(!(request.guba_id == null)) ? request.guba_id : "0",
-								(!(request.kabluk_id == null)) ? request.kabluk_id : "0",
-									(!(request.matirovka_id == null)) ? request.matirovka_id : "0",
-											(!(request.pechat_id == null)) ? request.pechat_id : "0",
-												(!(request.proshiv_id == null)) ? request.proshiv_id : "0",
-														
-				(!(request.pyatka_id == null)) ? request.pyatka_id : "0", 
-						(!(request.sled_id == null)) ? request.sled_id : "0", 
-							(!(request.spoyler_id == null)) ? request.spoyler_id : "0",
-								(!(request.ashpalt_id == null)) ? request.ashpalt_id : "0",
-										(!(request.prodir == null)) ? request.prodir : false,
-														(!(request.difersize == null)) ? request.difersize : false,
-																(!(request.tert == null)) ? request.tert : false,
-																		(!(request.frez == null)) ? request.frez : false,
-																				(!(request.sample == null)) ? request.sample : false,
-				(!(request.plastizol_id == null)) ? request.plastizol_id : "0")
-				);
-		
-		OutDoorOrderRowReq responce = new OutDoorOrderRowReq (tmp.id, tmp.outDoorOrder.id, 
-				tmp.attribute, tmp.number, tmp.barcode, tmp.product.id, tmp.getProduct().getName(), tmp.size, 
-				tmp.color.id, tmp.liner.id, tmp.rant.id, tmp.shpalt.id, 
-				tmp.getColor().getName(), tmp.getLiner().getName(), tmp.getRant().getName(), tmp.getShpalt().getName(),
-				tmp.vstavka.id, tmp.getVstavka().getName(), 
-				tmp.gelenok.id, tmp.getGelenok().getName(), 
-				tmp.guba.id, tmp.getGuba().getName(), 
-				tmp.kabluk.id, tmp.getKabluk().getName(), 
+		OutDoorOrder outDoorOrder = orderRepository.findById(request.getOrder_id()).orElseThrow();
 
-				tmp.matirovka.id, tmp.getMatirovka().getName(), 
+		OutDoorOrderRow tmp = repository.save(new OutDoorOrderRow(request.getId(),
+				new OutDoorOrder(outDoorOrder.getId(), outDoorOrder.getComment(), outDoorOrder.getDate(),
+						outDoorOrder.getDivision(), outDoorOrder.getUser(), outDoorOrder.getCustomer(),
+						outDoorOrder.getSample()),
+				(!(request.getAttribute() == null)) ? request.getAttribute() : "",
+				(!(request.getNumber() == null)) ? request.getNumber() : 0,
+				(!(request.getBarcode() == null)) ? request.getBarcode() : "",
+				(!(request.getProduct_id() == null)) ? request.getProduct_id() : "0", request.getSize(),
+				(!(request.getColor_id() == null)) ? request.getColor_id() : "0",
+				(!(request.getLiner_id() == null)) ? request.getLiner_id() : "0",
+				(!(request.getRant_id() == null)) ? request.getRant_id() : "0",
+				(!(request.getShpalt_id() == null)) ? request.getShpalt_id() : "0",
 
-				tmp.pechat.id, tmp.getPechat().getName(), 
-				tmp.proshiv.id, tmp.getProshiv().getName(), 
-				tmp.pyatka.id, tmp.getPyatka().getName(), 
-				tmp.sled.id, tmp.getSled().getName(), 
-				tmp.spoyler.id, tmp.getSpoyler().getName(), 
-				tmp.ashpalt.id, tmp.getAshpalt().getName(), 
+				(!(request.getVstavka_id() == null)) ? request.getVstavka_id() : "0",
+				(!(request.getGelenok_id() == null)) ? request.getGelenok_id() : "0",
+				(!(request.getGuba_id() == null)) ? request.getGuba_id() : "0",
+				(!(request.getKabluk_id() == null)) ? request.getKabluk_id() : "0",
+				(!(request.getMatirovka_id() == null)) ? request.getMatirovka_id() : "0",
+				(!(request.getPechat_id() == null)) ? request.getPechat_id() : "0",
+				(!(request.getProshiv_id() == null)) ? request.getProshiv_id() : "0",
 
-				tmp.prodir, tmp.difersize, tmp.tert, tmp.frez, tmp.sample,
-				tmp.plastizol.id, tmp.getPlastizol().getName()
-				);
-		
-		return responce;
-	}*/
+				(!(request.getPyatka_id() == null)) ? request.getPyatka_id() : "0",
+				(!(request.getSled_id() == null)) ? request.getSled_id() : "0",
+				(!(request.getSpoyler_id() == null)) ? request.getSpoyler_id() : "0",
+				(!(request.getAshpalt_id() == null)) ? request.getAshpalt_id() : "0",
+				(!(request.getProdir() == null)) ? request.getProdir() : false,
+				(!(request.getDifersize() == null)) ? request.getDifersize() : false,
+				(!(request.getTert() == null)) ? request.getTert() : false,
+				(!(request.getFrez() == null)) ? request.getFrez() : false,
+				(!(request.getSample() == null)) ? request.getSample() : false,
+				(!(request.getPlastizol_id() == null)) ? request.getPlastizol_id() : "0"));
+
+		return OutDoorOrderRowReq.rowToRowReq(tmp);
+	}
 }

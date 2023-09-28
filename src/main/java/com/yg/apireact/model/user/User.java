@@ -68,6 +68,7 @@ public class User implements UserDetails {
 	@Column(name = "dt", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Date dt ;
 	
+	@Column(name = "version", columnDefinition="BIGINT(20) default '0'")
 	private @Version @JsonIgnore Long version;
 
 	public Boolean getExternal() {

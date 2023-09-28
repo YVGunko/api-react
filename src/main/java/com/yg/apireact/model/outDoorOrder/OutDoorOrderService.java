@@ -50,7 +50,7 @@ public class OutDoorOrderService {
 		OutDoorOrder tmp = repo.save(new OutDoorOrder(orderId, request.comment, 
 				(request.date != null ? request.date : new Date()), division, user, 
 				customer, request.sample));	
-		OutDoorOrderReq responce = OutDoorOrderReq.outDoorOrderToOutDoorOrderReq(tmp) ;
+		OutDoorOrderReq responce = OutDoorOrderReq.orderToOrderReq(tmp) ;
 	
 		return responce;
 	}

@@ -1,51 +1,33 @@
 package com.yg.apireact.model.outDoorOrderRow;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-
 public class OutDoorOrderRowReq {
-	/* OutDoorOrderRow((@NotNull String id, @NotNull OutDoorOrder outDoorOrder, String attribute,
-	Integer number, String barcode, Product product, String size, 
-	Color color, Color liner, Color rant, Color shpalt, 
-	Color vstavka, 
-	Color gelenok, 
-	Color guba, 
-	Color kabluk, 
-
-	Color matirovka, 
-
-	Color pechat, 
-	Color proshiv, 
-	Color pyatka, 
-	Color sled,
-	Color spoyler, 
-	Color ashpalt, 
-	Color other, 
-	Boolean prodir, 
-
-	Boolean difersize, 
-	Boolean tert,
-	Boolean frez, 
-	Boolean sample)
+	/*
+	 * OutDoorOrderRow((@NotNull String id, @NotNull OutDoorOrder outDoorOrder,
+	 * String attribute, Integer number, String barcode, Product product, String
+	 * size, Color color, Color liner, Color rant, Color shpalt, Color vstavka,
+	 * Color gelenok, Color guba, Color kabluk,
+	 * 
+	 * Color matirovka,
+	 * 
+	 * Color pechat, Color proshiv, Color pyatka, Color sled, Color spoyler, Color
+	 * ashpalt, Color other, Boolean prodir,
+	 * 
+	 * Boolean difersize, Boolean tert, Boolean frez, Boolean sample)
 	 */
 	public OutDoorOrderRowReq(String id, String order_id, String attribute, Integer number, String barcode,
-			String product_id, String sProduct, String size, 
-			String color_id, String liner_id, String rant_id, String shpalt_id, 
-			String sColor, String sLiner, String sRant, String sShpalt, 
-			String vstavka_id, String sVstavka,
-			String gelenok_id, String sGelenok, 
-			String guba_id, String sGuba, 
-			String kabluk_id, String sKabluk,
-			String matirovka_id, String sMatirovka, 
-			String pechat_id, String sPechat, 
-			String proshiv_id, String sProshiv, 
-			String pyatka_id, String sPyatka, 
-			String sled_id,		String sSled, 
-			String spoyler_id, String sSpoyler, 
-			String ashpalt_id, String sAshpalt, 
-			Boolean prodir, Boolean difersize, Boolean tert, Boolean frez, Boolean sample,
-			String plastizol_id, String sPlastizol) {
+			String product_id, String sProduct, String size, String color_id, String sColor, String liner_id,
+			String sLiner, String rant_id, String sRant, String shpalt_id, String sShpalt, String vstavka_id,
+			String sVstavka, String gelenok_id, String sGelenok, String guba_id, String sGuba, String kabluk_id,
+			String sKabluk, String matirovka_id, String sMatirovka, String pechat_id, String sPechat, String proshiv_id,
+			String sProshiv, String pyatka_id, String sPyatka, String sled_id, String sSled, String spoyler_id,
+			String sSpoyler, String ashpalt_id, String sAshpalt, Boolean prodir, Boolean difersize, Boolean tert,
+			Boolean frez, Boolean sample, String plastizol_id, String sPlastizol) {
 		super();
 		this.id = id;
 		this.order_id = order_id;
@@ -90,32 +72,23 @@ public class OutDoorOrderRowReq {
 		this.sAshpalt = sAshpalt;
 		this.plastizol_id = plastizol_id;
 		this.sPlastizol = sPlastizol;
-		
+
 		this.prodir = prodir;
 		this.difersize = difersize;
 		this.tert = tert;
 		this.frez = frez;
 		this.sample = sample;
 	}
-	public OutDoorOrderRowReq(String id, String order_id, Integer number, String barcode,
-			String product_id, String sProduct, String size, 
-			String color_id, String liner_id, String rant_id, String shpalt_id, 
-			String vstavka_id, 
-			String gelenok_id, 
-			String guba_id, 
-			String kabluk_id, 
 
-			String matirovka_id, 
+	public OutDoorOrderRowReq(String id, String order_id, Integer number, String barcode, String product_id,
+			String sProduct, String size, String color_id, String liner_id, String rant_id, String shpalt_id,
+			String vstavka_id, String gelenok_id, String guba_id, String kabluk_id,
 
-			String pechat_id,
-			String proshiv_id, 
-			String pyatka_id, 
-			String sled_id,
-			String spoyler_id, 
-			String ashpalt_id, 
+			String matirovka_id,
 
-			Boolean prodir, Boolean difersize, Boolean tert, Boolean frez, Boolean sample, 
-			String plastizol_id) {
+			String pechat_id, String proshiv_id, String pyatka_id, String sled_id, String spoyler_id, String ashpalt_id,
+
+			Boolean prodir, Boolean difersize, Boolean tert, Boolean frez, Boolean sample, String plastizol_id) {
 		super();
 		this.id = id;
 		this.order_id = order_id;
@@ -151,21 +124,10 @@ public class OutDoorOrderRowReq {
 	}
 
 	public OutDoorOrderRowReq(String id, String order_id, String attribute, Integer number, String barcode,
-			String product_id, String size, 
-			String color_id, String liner_id, String rant_id, String shpalt_id, 
-			String vstavka_id, 
-			String gelenok_id,  
-			String guba_id, 
-			String kabluk_id, 
-			String matirovka_id, 
-			String pechat_id, 
-			String proshiv_id,  
-			String pyatka_id,  
-			String sled_id,	 
-			String spoyler_id, 
-			String ashpalt_id, 
-			Boolean prodir, Boolean difersize, Boolean tert, Boolean frez, Boolean sample,
-			String plastizol_id) {
+			String product_id, String size, String color_id, String liner_id, String rant_id, String shpalt_id,
+			String vstavka_id, String gelenok_id, String guba_id, String kabluk_id, String matirovka_id,
+			String pechat_id, String proshiv_id, String pyatka_id, String sled_id, String spoyler_id, String ashpalt_id,
+			Boolean prodir, Boolean difersize, Boolean tert, Boolean frez, Boolean sample, String plastizol_id) {
 		super();
 		this.id = id;
 		this.order_id = order_id;
@@ -191,13 +153,14 @@ public class OutDoorOrderRowReq {
 		this.spoyler_id = spoyler_id;
 		this.ashpalt_id = ashpalt_id;
 		this.plastizol_id = plastizol_id;
-		
+
 		this.prodir = prodir;
 		this.difersize = difersize;
 		this.tert = tert;
 		this.frez = frez;
 		this.sample = sample;
 	}
+
 	public String getProduct_id() {
 		return product_id;
 	}
@@ -205,7 +168,7 @@ public class OutDoorOrderRowReq {
 	public void setProduct_id(String product_id) {
 		this.product_id = product_id;
 	}
-	
+
 	public String getSize() {
 		return size;
 	}
@@ -342,7 +305,6 @@ public class OutDoorOrderRowReq {
 		this.sKabluk = sKabluk;
 	}
 
-
 	public String getMatirovka_id() {
 		return matirovka_id;
 	}
@@ -446,6 +408,7 @@ public class OutDoorOrderRowReq {
 	public void setAshpalt_id(String ashpalt_id) {
 		this.ashpalt_id = ashpalt_id;
 	}
+
 	public String getsAshpalt() {
 		return sAshpalt;
 	}
@@ -461,7 +424,6 @@ public class OutDoorOrderRowReq {
 	public void setProdir(Boolean prodir) {
 		this.prodir = prodir;
 	}
-
 
 	public Boolean getDifersize() {
 		return difersize;
@@ -535,7 +497,8 @@ public class OutDoorOrderRowReq {
 		this.barcode = barcode;
 	}
 
-	public OutDoorOrderRowReq(@NotNull String id, String order_id, String attribute, Integer number, String barcode, String product_id) {
+	public OutDoorOrderRowReq(@NotNull String id, String order_id, String attribute, Integer number, String barcode,
+			String product_id) {
 		super();
 		this.id = id;
 		this.order_id = order_id;
@@ -546,126 +509,160 @@ public class OutDoorOrderRowReq {
 	}
 
 	@JsonProperty("id")
-	public String id;	
+	private String id;
 	@JsonProperty("order_id")
-	public String order_id;	
+	private String order_id;
 	@JsonProperty("attribute")
-	public String attribute;	
+	private String attribute;
 	@JsonProperty("number")
-	public Integer number;	
+	private Integer number;
 	@JsonProperty("barcode")
-	public String barcode;
-	
+	private String barcode;
+
 	@JsonProperty("product_id")
-	public String product_id;
+	private String product_id;
 	@JsonProperty("sProduct")
-	public String sProduct;
+	private String sProduct;
+
 	public String getsProduct() {
 		return sProduct;
 	}
+
 	public void setsProduct(String sProduct) {
 		this.sProduct = sProduct;
 	}
 
 	@JsonProperty("size")
-	public String size;
+	private String size;
 	@JsonProperty("color_id")
-	public String color_id;
+	private String color_id;
 	@JsonProperty("liner_id")
-	public String liner_id;
+	private String liner_id;
 	@JsonProperty("shpalt_id")
-	public String shpalt_id;
+	private String shpalt_id;
 	@JsonProperty("rant_id")
-	public String rant_id;
+	private String rant_id;
 	@JsonProperty("sColor")
-	public String sColor;
+	private String sColor;
 	@JsonProperty("sLiner")
-	public String sLiner;
+	private String sLiner;
 	@JsonProperty("sShpalt")
-	public String sShpalt;
+	private String sShpalt;
 	@JsonProperty("sRant")
-	public String sRant;
-	//***Атрибут
+	private String sRant;
+	// ***Атрибут
 	@JsonProperty("vstavka_id")
-	public String vstavka_id ;
+	private String vstavka_id;
 	@JsonProperty("sVstavka")
-	public String sVstavka ;
+	private String sVstavka;
 	@JsonProperty("gelenok_id")
-	public String gelenok_id ;
+	private String gelenok_id;
 	@JsonProperty("sGelenok")
-	public String sGelenok ;
+	private String sGelenok;
 	@JsonProperty("guba_id")
-	public String guba_id ;
+	private String guba_id;
 	@JsonProperty("sGuba")
-	public String sGuba ;	
+	private String sGuba;
 	@JsonProperty("kabluk_id")
-	public String kabluk_id ;
+	private String kabluk_id;
 	@JsonProperty("sKabluk")
-	public String sKabluk ;	
-	
+	private String sKabluk;
+
 	@JsonProperty("matirovka_id")
-	public String matirovka_id ;
+	private String matirovka_id;
 	@JsonProperty("sMatirovka")
-	public String sMatirovka ;	
+	private String sMatirovka;
 
 	@JsonProperty("pechat_id")
-	public String pechat_id ;
+	private String pechat_id;
 	@JsonProperty("sPechat")
-	public String sPechat ;		
+	private String sPechat;
 	@JsonProperty("proshiv_id")
-	public String proshiv_id ;
+	private String proshiv_id;
 	@JsonProperty("sProshiv")
-	public String sProshiv ;	
+	private String sProshiv;
 	@JsonProperty("pyatka_id")
-	public String pyatka_id ;
+	private String pyatka_id;
 	@JsonProperty("sPyatka")
-	public String sPyatka ;	
+	private String sPyatka;
 	@JsonProperty("sled_id")
-	public String sled_id ;
+	private String sled_id;
 	@JsonProperty("sSled")
-	public String sSled ;	
+	private String sSled;
 	@JsonProperty("spoyler_id")
-	public String spoyler_id ;
+	private String spoyler_id;
 	@JsonProperty("sSpoyler")
-	public String sSpoyler ;	
+	private String sSpoyler;
 	@JsonProperty("ashpalt_id")
-	public String ashpalt_id ;
+	private String ashpalt_id;
 	@JsonProperty("sAshpalt")
-	public String sAshpalt;
+	private String sAshpalt;
 	@JsonProperty("plastizol_id")
-	public String plastizol_id ;
+	private String plastizol_id;
 	@JsonProperty("sPlastizol")
-	public String sPlastizol;
+	private String sPlastizol;
 
-	
 	@JsonProperty("prodir")
-	public Boolean prodir=false;
+	private Boolean prodir = false;
 
 	@JsonProperty("difersize")
-	public Boolean difersize=false;
+	private Boolean difersize = false;
 	@JsonProperty("tert")
-	public Boolean tert=false;
+	private Boolean tert = false;
 	@JsonProperty("frez")
-	public Boolean frez=false;
+	private Boolean frez = false;
 	@JsonProperty("sample")
-	public Boolean sample=false;
-	
+	private Boolean sample = false;
+
 	public OutDoorOrderRowReq() {
 		super();
 	}
+
 	public String getPlastizol_id() {
 		return plastizol_id;
 	}
+
 	public void setPlastizol_id(String plastizol_id) {
 		this.plastizol_id = plastizol_id;
 	}
+
 	public String getsPlastizol() {
 		return sPlastizol;
 	}
+
 	public void setsPlastizol(String sPlastizol) {
 		this.sPlastizol = sPlastizol;
 	}
 
+	/*
+	 * OutDoorOrderRowReq(String id, String order_id, String attribute, Integer
+	 * number, String barcode, String product_id, String sProduct, String size,
+	 * String color_id, String liner_id, String rant_id, String shpalt_id, String
+	 * sColor, String sLiner, String sRant, String sShpalt, String vstavka_id,
+	 * String sVstavka, String gelenok_id, String sGelenok, String guba_id, String
+	 * sGuba, String kabluk_id, String sKabluk, String matirovka_id, String
+	 * sMatirovka, String pechat_id, String sPechat, String proshiv_id, String
+	 * sProshiv, String pyatka_id, String sPyatka, String sled_id, String sSled,
+	 * String spoyler_id, String sSpoyler, String ashpalt_id, String sAshpalt,
+	 * Boolean prodir, Boolean difersize, Boolean tert, Boolean frez, Boolean
+	 * sample, String plastizol_id, String sPlastizol
+	 *
+	 */
+	public static OutDoorOrderRowReq rowToRowReq(OutDoorOrderRow b) {
+		return new OutDoorOrderRowReq(b.getId(), b.getOutDoorOrder().getId(), b.getAttribute(), b.getNumber(),
+				b.getBarcode(), b.getProduct().getId(), b.getProduct().getName(), b.getSize(), b.getColor().getId(),
+				b.getColor().getName(), b.getLiner().getId(), b.getLiner().getName(), b.getRant().getId(),
+				b.getRant().getName(), b.getShpalt().getId(), b.getShpalt().getName(), b.getVstavka().getId(),
+				b.getVstavka().getName(), b.getGelenok().getId(), b.getGelenok().getName(), b.getGuba().getId(),
+				b.getGuba().getName(), b.getKabluk().getId(), b.getKabluk().getName(), b.getMatirovka().getId(),
+				b.getMatirovka().getName(), b.getPechat().getId(), b.getPechat().getName(), b.getProshiv().getId(),
+				b.getProshiv().getName(), b.getPyatka().getId(), b.getPyatka().getName(), b.getSled().getId(),
+				b.getSled().getName(), b.getSpoyler().getId(), b.getSpoyler().getName(), b.getAshpalt().getId(),
+				b.getAshpalt().getName(), b.getProdir(), b.getDifersize(), b.getTert(), b.getFrez(), b.getSample(),
+				b.getPlastizol().getId(), b.getPlastizol().getName());
+	}
 
-
+	public static List<OutDoorOrderRowReq> rowToRowReq(List<OutDoorOrderRow> list) {
+		return list.stream().map(b -> rowToRowReq(b)).collect(Collectors.toList());
+	}
 }

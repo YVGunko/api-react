@@ -1,4 +1,4 @@
-package com.yg.apireact.model.product;
+package com.yg.apireact.model.color;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,50 +16,49 @@ import org.springframework.util.Assert;
 import com.yg.apireact.model.division.DivisionRepository;
 
 @Service
-public class ProductService {
-	private static final Logger log = LoggerFactory.getLogger(ProductService.class);
-
+public class ColorService {
+	private static final Logger log = LoggerFactory.getLogger(ColorService.class);
 	@Autowired
-	ProductRepository repo;
+	ColorRepository repo;
 	@Autowired
 	DivisionRepository repoDiv;
-
-	ResponseEntity<List<Product>> find(String divisionCode, String productName) {
-		List<Product> respond = new ArrayList<Product>();
+	
+	public ResponseEntity<List<Color>> find(String divisionCode, String colorName) {
+		List<Color> respond = new ArrayList<Color>();
 		try {
 			Assert.hasLength(divisionCode, "Division Code provided isn't valid");
-			repoDiv.findById(divisionCode).orElseThrow(() -> new NoSuchElementException(
+			repoDiv.findById(divisionCode).orElseThrow(() -> new IllegalArgumentException(
 					"Division not found exception. divisionCode=".concat(divisionCode)));
 
-			if (StringUtils.isNotBlank(productName)) {
-				respond = repo.findByDivisionCodeAndNameContainingOrderByName(divisionCode, productName)
-						.orElseGet(() -> List.of(new Product()));
+			if (StringUtils.isNotBlank(colorName)) {
+				respond = repo.findByDivisionCodeAndNameContainingOrderByName(divisionCode, colorName)
+						.orElseGet(() -> List.of(new Color()));
 			} else {
-				respond = repo.findByDivisionCodeOrderByName(divisionCode).orElseGet(() -> List.of(new Product()));
+				respond = repo.findByDivisionCodeOrderByName(divisionCode).orElseGet(() -> List.of(new Color()));
 			}
 			return new ResponseEntity<>(respond, HttpStatus.OK);
 		} catch (IllegalArgumentException | NoSuchElementException e) {
-			log.error("Product not found exception. divisionCode=".concat(divisionCode).concat("productName = ")
-					.concat(productName));
+			log.error("Color not found exception. divisionCode=".concat(divisionCode).concat("ColorName = ")
+					.concat(colorName));
 			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
-			log.error("Product find method's been raised Exception. Message=", e.getMessage());
+			log.error("Color find method's been raised Exception. Message=".concat(divisionCode).concat("ColorName = ")
+					.concat(colorName), e.getMessage());
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-
-	ResponseEntity<Product> find(String id) {
+	ResponseEntity<Color> find(String id) {
 		try {
 			Assert.hasLength(id, "id provided isn't valid");
 
-			Product respond = repo.findById(id).orElseThrow();
+			Color respond = repo.findById(id).orElseThrow();
 
 			return new ResponseEntity<>(respond, HttpStatus.OK);
 		} catch (IllegalArgumentException | NoSuchElementException e) {
-			log.error("Product not found exception. id=".concat(id));
+			log.error("Color not found exception. id=".concat(id));
 			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
-			log.error("Product find method's been raised Exception. Message=", e.getMessage());
+			log.error("Color find method's been raised Exception. Message=", e.getMessage());
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

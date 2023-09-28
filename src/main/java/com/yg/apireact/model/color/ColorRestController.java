@@ -1,4 +1,4 @@
-package com.yg.apireact.model.product;
+package com.yg.apireact.model.color;
 
 import java.util.List;
 
@@ -20,17 +20,17 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = { "http://localhost:8082", "http://localhost:3000" }, methods = { RequestMethod.GET,
 		RequestMethod.OPTIONS, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.PATCH,
 		RequestMethod.HEAD })
-@RequestMapping("/api/products")
-public class ProductRestController {
+@RequestMapping("/api/colors")
+public class ColorRestController {
 	@Autowired
-	ProductRepository repo;
+	ColorRepository repo;
 	@Autowired
-	ProductService service;
+	ColorService service;
 
 	@CrossOrigin(origins = { "http://localhost:8082", "http://localhost:3000" }, methods = { RequestMethod.GET,
 			RequestMethod.OPTIONS })
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<Product>> getAll(
+	public ResponseEntity<List<Color>> getAll(
 			@RequestParam(name = "division_code", required = true) String divisionCode) {
 		return service.find(divisionCode, null);
 	}
@@ -38,7 +38,7 @@ public class ProductRestController {
 	@CrossOrigin(origins = { "http://localhost:8082", "http://localhost:3000" }, methods = { RequestMethod.GET,
 			RequestMethod.OPTIONS })
 	@RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Product> getById(@PathVariable @NotNull String id) {
+	public ResponseEntity<Color> getById(@PathVariable @NotNull String id) {
 		return service.find(id);
 	}
 }
