@@ -24,18 +24,19 @@ public class ProductService {
 	@Autowired
 	DivisionRepository repoDiv;
 
-	ResponseEntity<List<Product>> find(String divisionCode, String productName) {
-		List<Product> respond = new ArrayList<Product>();
+	ResponseEntity<List<ProductReq>> find(String divisionCode, String productName) {
+		List<ProductReq> respond = new ArrayList<ProductReq>();
 		try {
 			Assert.hasLength(divisionCode, "Division Code provided isn't valid");
 			repoDiv.findById(divisionCode).orElseThrow(() -> new NoSuchElementException(
 					"Division not found exception. divisionCode=".concat(divisionCode)));
 
 			if (StringUtils.isNotBlank(productName)) {
-				respond = repo.findByDivisionCodeAndNameContainingOrderByName(divisionCode, productName)
-						.orElseGet(() -> List.of(new Product()));
+				respond = ProductReq.productToProductReq(repo.findByDivisionCodeAndNameContainingOrderByName(divisionCode, productName)
+						.orElseGet(() -> List.of(new Product())));
 			} else {
-				respond = repo.findByDivisionCodeOrderByName(divisionCode).orElseGet(() -> List.of(new Product()));
+				respond = ProductReq.productToProductReq(repo.findByDivisionCodeOrderByName(divisionCode)
+						.orElseGet(() -> List.of(new Product())));
 			}
 			return new ResponseEntity<>(respond, HttpStatus.OK);
 		} catch (IllegalArgumentException | NoSuchElementException e) {
@@ -48,11 +49,11 @@ public class ProductService {
 		}
 	}
 
-	ResponseEntity<Product> find(String id) {
+	ResponseEntity<ProductReq> find(String id) {
 		try {
 			Assert.hasLength(id, "id provided isn't valid");
 
-			Product respond = repo.findById(id).orElseThrow();
+			ProductReq respond = ProductReq.productToProductReq(repo.findById(id).orElseThrow());
 
 			return new ResponseEntity<>(respond, HttpStatus.OK);
 		} catch (IllegalArgumentException | NoSuchElementException e) {

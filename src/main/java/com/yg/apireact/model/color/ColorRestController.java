@@ -30,7 +30,7 @@ public class ColorRestController {
 	@CrossOrigin(origins = { "http://localhost:8082", "http://localhost:3000" }, methods = { RequestMethod.GET,
 			RequestMethod.OPTIONS })
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<Color>> getAll(
+	public ResponseEntity<List<ColorReq>> getAll(
 			@RequestParam(name = "division_code", required = true) String divisionCode) {
 		return service.find(divisionCode, null);
 	}
@@ -38,7 +38,7 @@ public class ColorRestController {
 	@CrossOrigin(origins = { "http://localhost:8082", "http://localhost:3000" }, methods = { RequestMethod.GET,
 			RequestMethod.OPTIONS })
 	@RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Color> getById(@PathVariable @NotNull String id) {
+	public ResponseEntity<ColorReq> getById(@PathVariable @NotNull String id) {
 		return service.find(id);
 	}
 }

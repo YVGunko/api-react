@@ -23,18 +23,19 @@ public class ColorService {
 	@Autowired
 	DivisionRepository repoDiv;
 	
-	public ResponseEntity<List<Color>> find(String divisionCode, String colorName) {
-		List<Color> respond = new ArrayList<Color>();
+	public ResponseEntity<List<ColorReq>> find(String divisionCode, String colorName) {
+		List<ColorReq> respond = new ArrayList<ColorReq>();
 		try {
 			Assert.hasLength(divisionCode, "Division Code provided isn't valid");
 			repoDiv.findById(divisionCode).orElseThrow(() -> new IllegalArgumentException(
 					"Division not found exception. divisionCode=".concat(divisionCode)));
 
 			if (StringUtils.isNotBlank(colorName)) {
-				respond = repo.findByDivisionCodeAndNameContainingOrderByName(divisionCode, colorName)
-						.orElseGet(() -> List.of(new Color()));
+				respond = ColorReq.colorToColorReq(repo.findByDivisionCodeAndNameContainingOrderByName(divisionCode, colorName)
+						.orElseGet(() -> List.of(new Color())));
 			} else {
-				respond = repo.findByDivisionCodeOrderByName(divisionCode).orElseGet(() -> List.of(new Color()));
+				respond = ColorReq.colorToColorReq(repo.findByDivisionCodeOrderByName(divisionCode)
+						.orElseGet(() -> List.of(new Color())));
 			}
 			return new ResponseEntity<>(respond, HttpStatus.OK);
 		} catch (IllegalArgumentException | NoSuchElementException e) {
@@ -47,11 +48,11 @@ public class ColorService {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	ResponseEntity<Color> find(String id) {
+	ResponseEntity<ColorReq> find(String id) {
 		try {
 			Assert.hasLength(id, "id provided isn't valid");
 
-			Color respond = repo.findById(id).orElseThrow();
+			ColorReq respond = ColorReq.colorToColorReq(repo.findById(id).orElseThrow());
 
 			return new ResponseEntity<>(respond, HttpStatus.OK);
 		} catch (IllegalArgumentException | NoSuchElementException e) {
