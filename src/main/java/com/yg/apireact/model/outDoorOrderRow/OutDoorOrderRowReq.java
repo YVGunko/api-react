@@ -80,49 +80,6 @@ public class OutDoorOrderRowReq {
 		this.sample = sample;
 	}
 
-	public OutDoorOrderRowReq(String id, String order_id, Integer number, String barcode, String product_id,
-			String sProduct, String size, String color_id, String liner_id, String rant_id, String shpalt_id,
-			String vstavka_id, String gelenok_id, String guba_id, String kabluk_id,
-
-			String matirovka_id,
-
-			String pechat_id, String proshiv_id, String pyatka_id, String sled_id, String spoyler_id, String ashpalt_id,
-
-			Boolean prodir, Boolean difersize, Boolean tert, Boolean frez, Boolean sample, String plastizol_id) {
-		super();
-		this.id = id;
-		this.order_id = order_id;
-
-		this.number = number;
-		this.barcode = barcode;
-		this.product_id = product_id;
-		this.sProduct = sProduct;
-		this.size = size;
-		this.color_id = color_id;
-		this.liner_id = liner_id;
-		this.shpalt_id = shpalt_id;
-		this.rant_id = rant_id;
-
-		this.vstavka_id = vstavka_id;
-		this.gelenok_id = gelenok_id;
-		this.guba_id = guba_id;
-		this.kabluk_id = kabluk_id;
-		this.matirovka_id = matirovka_id;
-		this.pechat_id = pechat_id;
-		this.proshiv_id = proshiv_id;
-		this.pyatka_id = pyatka_id;
-		this.sled_id = sled_id;
-		this.spoyler_id = spoyler_id;
-		this.ashpalt_id = ashpalt_id;
-		this.plastizol_id = plastizol_id;
-
-		this.prodir = prodir;
-		this.difersize = difersize;
-		this.tert = tert;
-		this.frez = frez;
-		this.sample = sample;
-	}
-
 	public OutDoorOrderRowReq(String id, String order_id, String attribute, Integer number, String barcode,
 			String product_id, String size, String color_id, String liner_id, String rant_id, String shpalt_id,
 			String vstavka_id, String gelenok_id, String guba_id, String kabluk_id, String matirovka_id,
@@ -131,7 +88,6 @@ public class OutDoorOrderRowReq {
 		super();
 		this.id = id;
 		this.order_id = order_id;
-
 		this.attribute = attribute;
 		this.number = number;
 		this.barcode = barcode;
@@ -153,7 +109,6 @@ public class OutDoorOrderRowReq {
 		this.spoyler_id = spoyler_id;
 		this.ashpalt_id = ashpalt_id;
 		this.plastizol_id = plastizol_id;
-
 		this.prodir = prodir;
 		this.difersize = difersize;
 		this.tert = tert;

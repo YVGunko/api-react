@@ -51,6 +51,10 @@ public class OutDoorOrderRow {
 	    encoded = encoded.replace("]", "");
 	    return encoded;
 	}
+	public OutDoorOrderRow (@NotNull OutDoorOrder outDoorOrder) {
+		super();
+		this.outDoorOrder = outDoorOrder;
+	}
 	public OutDoorOrderRow ( String product_name, String product_id, Long number) {
 		super();
 		this.number = number.intValue();
@@ -288,25 +292,24 @@ public class OutDoorOrderRow {
 		this.attribute = replaceReservedCharacters(attribute);
 		this.number = number;
 		this.barcode = barcode;
-		this.product = new Product(product_id,"","");
+		this.product = new Product(StringUtils.isNotBlank(product_id) ? product_id : "0","","");
 		this.size = size;
-		this.color = new Color(color_id);
-		this.liner = new Color(liner_id);
-		this.rant = new Color(rant_id);
-		this.shpalt = new Color(shpalt_id);
-		this.vstavka = new Color(vstavka_id);
-		this.gelenok = new Color(gelenok_id);
-		this.guba = new Color(guba_id);
-		this.kabluk = new Color(kabluk_id);
-		this.matirovka = new Color(matirovka_id);
-
-		this.pechat = new Color(pechat_id);
-		this.proshiv = new Color(proshiv_id);
-		this.pyatka = new Color(pyatka_id);
-		this.sled = new Color(sled_id);
-		this.spoyler = new Color(spoyler_id);
-		this.ashpalt = new Color(ashpalt_id);
-		this.plastizol = new Color(plastizol_id);
+		this.color = new Color(StringUtils.isNotBlank(color_id) ? color_id : "0");
+		this.liner = new Color(StringUtils.isNotBlank(liner_id) ? liner_id : "0");
+		this.rant = new Color(StringUtils.isNotBlank(rant_id) ? rant_id : "0");
+		this.shpalt = new Color(StringUtils.isNotBlank(shpalt_id) ? shpalt_id : "0");
+		this.vstavka = new Color(StringUtils.isNotBlank(vstavka_id) ? vstavka_id : "0");
+		this.gelenok = new Color(StringUtils.isNotBlank(gelenok_id) ? gelenok_id : "0");
+		this.guba = new Color(StringUtils.isNotBlank(guba_id) ? guba_id : "0");
+		this.kabluk = new Color(StringUtils.isNotBlank(kabluk_id) ? kabluk_id : "0");
+		this.matirovka = new Color(StringUtils.isNotBlank(matirovka_id) ? matirovka_id : "0");
+		this.pechat = new Color(StringUtils.isNotBlank(pechat_id) ? pechat_id : "0");
+		this.proshiv = new Color(StringUtils.isNotBlank(proshiv_id) ? proshiv_id : "0");
+		this.pyatka = new Color(StringUtils.isNotBlank(pyatka_id) ? pyatka_id : "0");
+		this.sled = new Color(StringUtils.isNotBlank(sled_id) ? sled_id : "0");
+		this.spoyler = new Color(StringUtils.isNotBlank(spoyler_id) ? spoyler_id : "0");
+		this.ashpalt = new Color(StringUtils.isNotBlank(ashpalt_id) ? ashpalt_id : "0");
+		this.plastizol = new Color(StringUtils.isNotBlank(plastizol_id) ? plastizol_id : "0");
 		this.prodir = prodir;
 		this.difersize = difersize;
 		this.tert = tert;

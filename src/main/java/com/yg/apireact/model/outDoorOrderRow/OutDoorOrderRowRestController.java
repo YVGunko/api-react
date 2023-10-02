@@ -1,7 +1,6 @@
 package com.yg.apireact.model.outDoorOrderRow;
 
 import java.util.List;
-
 import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +37,7 @@ public class OutDoorOrderRowRestController {
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<OutDoorOrderRowReq>> getRowListByOrderId(@RequestParam(name = "orderId", required = true) String orderId) {
 		try {
-			return new ResponseEntity<>(OutDoorOrderRowReq.rowToRowReq(repo.findByOutDoorOrderIdOrderByDtDesc(orderId).orElseThrow()), HttpStatus.OK);
+			return new ResponseEntity<>(OutDoorOrderRowReq.rowToRowReq(repo.findByOutDoorOrderId(orderId).orElseThrow()), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -56,7 +55,7 @@ public class OutDoorOrderRowRestController {
 	}
 
 	@CrossOrigin(origins = { "http://localhost:8082", "http://localhost:3000" }, methods = { RequestMethod.POST })
-	@RequestMapping(value = "", method = { RequestMethod.POST }, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "{act}", method = { RequestMethod.POST }, produces = MediaType.APPLICATION_JSON_VALUE)
 
 	public ResponseEntity<OutDoorOrderRowReq> post(@RequestBody OutDoorOrderRowReq request) {
 		try {
@@ -66,7 +65,17 @@ public class OutDoorOrderRowRestController {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	@CrossOrigin(origins = { "http://localhost:8082", "http://localhost:3000" }, methods = { RequestMethod.POST })
+	@RequestMapping(value = "", method = { RequestMethod.POST }, produces = MediaType.APPLICATION_JSON_VALUE)
 
+	public ResponseEntity<OutDoorOrderRowReq> copy(@RequestBody OutDoorOrderRowReq payload) {
+		try {
+			OutDoorOrderRowReq response = service.saveOrUpdate(payload);
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 	@CrossOrigin(origins = { "http://localhost:8082", "http://localhost:3000" }, methods = { RequestMethod.PUT,
 			RequestMethod.PATCH })
 	@RequestMapping(value = "{id}", method = { RequestMethod.PUT,
