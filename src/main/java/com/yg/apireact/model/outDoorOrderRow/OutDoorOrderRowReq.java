@@ -1,5 +1,6 @@
 package com.yg.apireact.model.outDoorOrderRow;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,11 +28,10 @@ public class OutDoorOrderRowReq {
 			String sKabluk, String matirovka_id, String sMatirovka, String pechat_id, String sPechat, String proshiv_id,
 			String sProshiv, String pyatka_id, String sPyatka, String sled_id, String sSled, String spoyler_id,
 			String sSpoyler, String ashpalt_id, String sAshpalt, Boolean prodir, Boolean difersize, Boolean tert,
-			Boolean frez, Boolean sample, String plastizol_id, String sPlastizol) {
+			Boolean frez, Boolean sample, String plastizol_id, String sPlastizol, Date createdAt) {
 		super();
 		this.id = id;
 		this.order_id = order_id;
-
 		this.attribute = attribute;
 		this.number = number;
 		this.barcode = barcode;
@@ -54,10 +54,8 @@ public class OutDoorOrderRowReq {
 		this.sGuba = sGuba;
 		this.kabluk_id = kabluk_id;
 		this.sKabluk = sKabluk;
-
 		this.matirovka_id = matirovka_id;
 		this.sMatirovka = sMatirovka;
-
 		this.pechat_id = pechat_id;
 		this.sPechat = sPechat;
 		this.proshiv_id = proshiv_id;
@@ -72,12 +70,12 @@ public class OutDoorOrderRowReq {
 		this.sAshpalt = sAshpalt;
 		this.plastizol_id = plastizol_id;
 		this.sPlastizol = sPlastizol;
-
 		this.prodir = prodir;
 		this.difersize = difersize;
 		this.tert = tert;
 		this.frez = frez;
 		this.sample = sample;
+		this.createdAt = createdAt;
 	}
 
 	public OutDoorOrderRowReq(String id, String order_id, String attribute, Integer number, String barcode,
@@ -568,7 +566,9 @@ public class OutDoorOrderRowReq {
 	private Boolean frez = false;
 	@JsonProperty("sample")
 	private Boolean sample = false;
-
+	@JsonProperty("createdat")
+	private Date createdAt;
+	
 	public OutDoorOrderRowReq() {
 		super();
 	}
@@ -636,10 +636,18 @@ public class OutDoorOrderRowReq {
 				b.getProshiv().getName(), b.getPyatka().getId(), b.getPyatka().getName(), b.getSled().getId(),
 				b.getSled().getName(), b.getSpoyler().getId(), b.getSpoyler().getName(), b.getAshpalt().getId(),
 				b.getAshpalt().getName(), b.getProdir(), b.getDifersize(), b.getTert(), b.getFrez(), b.getSample(),
-				b.getPlastizol().getId(), b.getPlastizol().getName());
+				b.getPlastizol().getId(), b.getPlastizol().getName(), b.getCreatedAt());
 	}
 
 	public static List<OutDoorOrderRowReq> rowToRowReq(List<OutDoorOrderRow> list) {
 		return list.stream().map(b -> rowToRowReq(b)).collect(Collectors.toList());
+	}
+
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
 	}
 }

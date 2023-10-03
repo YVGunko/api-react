@@ -75,7 +75,8 @@ public class OutDoorOrderRowService {
 				request.getTert(),
 				request.getFrez(),
 				request.getSample(),
-				request.getPlastizol_id()));
+				request.getPlastizol_id(),
+				request.getCreatedAt()));
 
 		return OutDoorOrderRowReq.rowToRowReq(tmp);
 	}

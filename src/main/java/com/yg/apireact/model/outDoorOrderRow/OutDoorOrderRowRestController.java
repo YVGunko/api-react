@@ -37,7 +37,7 @@ public class OutDoorOrderRowRestController {
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<OutDoorOrderRowReq>> getRowListByOrderId(@RequestParam(name = "orderId", required = true) String orderId) {
 		try {
-			return new ResponseEntity<>(OutDoorOrderRowReq.rowToRowReq(repo.findByOutDoorOrderIdOrderByDtDesc(orderId).orElseThrow()), HttpStatus.OK);
+			return new ResponseEntity<>(OutDoorOrderRowReq.rowToRowReq(repo.findByOutDoorOrderIdOrderByCreatedAtDesc(orderId).orElseThrow()), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}

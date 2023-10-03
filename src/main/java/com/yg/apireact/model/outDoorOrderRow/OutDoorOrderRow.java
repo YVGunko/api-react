@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.lang.Nullable;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -141,7 +142,7 @@ public class OutDoorOrderRow {
 			Integer number, String barcode, Product product, String size, Color color, Color liner, Color rant,
 			Color shpalt, Color vstavka, Color gelenok, Color guba, Color kabluk, Color matirovka, Color pechat, Color proshiv, Color pyatka, Color sled,
 			Color spoyler, Color ashpalt, Boolean prodir, Boolean difersize, Boolean tert,
-			Boolean frez, Boolean sample, Color plastizol) {
+			Boolean frez, Boolean sample, Color plastizol, Date createAt) {
 		super();
 		this.id = id;
 		this.outDoorOrder = outDoorOrder;
@@ -171,6 +172,7 @@ public class OutDoorOrderRow {
 		this.frez = frez;
 		this.sample = sample;
 		this.plastizol = plastizol;
+		this.createdAt = createAt;
 	}
 
 	@Access(AccessType.PROPERTY)
@@ -271,8 +273,12 @@ public class OutDoorOrderRow {
 		private Boolean sample=false;
 
 		@JsonFormat(pattern="dd.MM.yyyy HH:mm:ss",timezone="Europe/Moscow")
-
+		@Column(name = "dt", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 		private Date dt;
+		
+		@Column(name = "createdat")
+		@CreationTimestamp
+		private Date createdAt;
 
 		@JsonProperty("plastizol")
 		@ManyToOne(optional = false)
@@ -284,7 +290,8 @@ public class OutDoorOrderRow {
 			String vstavka_id, String gelenok_id, String guba_id, String kabluk_id, String matirovka_id, 
 			String pechat_id, String proshiv_id, String pyatka_id, String sled_id, String spoyler_id,
 			String ashpalt_id, 
-			Boolean prodir, Boolean difersize, Boolean tert, Boolean frez, Boolean sample, String plastizol_id	) {
+			Boolean prodir, Boolean difersize, Boolean tert, Boolean frez, Boolean sample, String plastizol_id,
+			Date createAt) {
 		super();
 		this.id = id;
 		this.outDoorOrder = outDoorOrder;
@@ -315,6 +322,7 @@ public class OutDoorOrderRow {
 		this.tert = (tert != null) ? tert : false;
 		this.frez = (frez != null) ? frez : false;
 		this.sample = (sample != null) ? sample : false;
+		this.createdAt = createAt;
 	}
 
 	public String getId() {
@@ -519,6 +527,12 @@ public class OutDoorOrderRow {
 	
 	public OutDoorOrderRow() {
 		super();
+	}
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
 	}
 
 }
