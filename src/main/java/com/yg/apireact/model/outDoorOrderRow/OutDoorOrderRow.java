@@ -271,8 +271,8 @@ public class OutDoorOrderRow {
 		private Boolean sample=false;
 
 		@JsonFormat(pattern="dd.MM.yyyy HH:mm:ss",timezone="Europe/Moscow")
-		@Column(name = "dt", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-		private Date dt = new Date();
+
+		private Date dt;
 
 		@JsonProperty("plastizol")
 		@ManyToOne(optional = false)
@@ -290,10 +290,10 @@ public class OutDoorOrderRow {
 		this.outDoorOrder = outDoorOrder;
 
 		this.attribute = replaceReservedCharacters(attribute);
-		this.number = number;
+		this.number = (number != null) ? number : 1;
 		this.barcode = barcode;
 		this.product = new Product(StringUtils.isNotBlank(product_id) ? product_id : "0","","");
-		this.size = size;
+		this.size = StringUtils.isNotBlank(size) ? size : "0";
 		this.color = new Color(StringUtils.isNotBlank(color_id) ? color_id : "0");
 		this.liner = new Color(StringUtils.isNotBlank(liner_id) ? liner_id : "0");
 		this.rant = new Color(StringUtils.isNotBlank(rant_id) ? rant_id : "0");
@@ -310,11 +310,11 @@ public class OutDoorOrderRow {
 		this.spoyler = new Color(StringUtils.isNotBlank(spoyler_id) ? spoyler_id : "0");
 		this.ashpalt = new Color(StringUtils.isNotBlank(ashpalt_id) ? ashpalt_id : "0");
 		this.plastizol = new Color(StringUtils.isNotBlank(plastizol_id) ? plastizol_id : "0");
-		this.prodir = prodir;
-		this.difersize = difersize;
-		this.tert = tert;
-		this.frez = frez;
-		this.sample = sample;
+		this.prodir = (prodir != null) ? prodir : false;
+		this.difersize = (difersize != null) ? difersize : false;
+		this.tert = (tert != null) ? tert : false;
+		this.frez = (frez != null) ? frez : false;
+		this.sample = (sample != null) ? sample : false;
 	}
 
 	public String getId() {

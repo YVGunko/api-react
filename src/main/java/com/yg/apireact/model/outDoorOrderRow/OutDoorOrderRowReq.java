@@ -602,7 +602,29 @@ public class OutDoorOrderRowReq {
 	 * Boolean prodir, Boolean difersize, Boolean tert, Boolean frez, Boolean
 	 * sample, String plastizol_id, String sPlastizol
 	 *
+	 *IF(repeated.current.sVstavka!="...","Вст."+repeated.current.sVstavka,"")
+	 *+IF(repeated.current.sAshpalt!="..."," "
+	 *+IF(params.ppDivisionCode==appVars.tepCode,"Шпал.","Крас.")+repeated.current.sAshpalt,"")
+	 *+IF(repeated.current.sSpoyler!="..."," "
+	 *+IF(params.ppDivisionCode==appVars.tepCode,"Спойл.","М1.")+repeated.current.sSpoyler,"")
+	 *+IF(repeated.current.sGuba!="..."," "
+	 *+IF(params.ppDivisionCode==appVars.tepCode,"Губа.","М2.")+repeated.current.sGuba,"")
+	 *+IF(repeated.current.sKabluk!="..."," "
+	 *+IF(params.ppDivisionCode==appVars.tepCode,"Кабл.","М3.")+repeated.current.sKabluk,"")
+	 *+IF(repeated.current.sGelenok!="..."," "+"Гел."+repeated.current.sGelenok,"")
+	 *+IF(repeated.current.sSled!="..."," "+"След."+repeated.current.sSled,"")
+	 *+IF(repeated.current.sPyatka!="..."," "+"Пятк."+repeated.current.sPyatka,"")
+	 *+IF(repeated.current.tert==true," "+"Терт.","")
+	 *+IF(repeated.current.sMatirovka!="..."," "+"Мат."+repeated.current.sMatirovka,"")
+	 *+IF(repeated.current.sPechat!="..."," "+"Печ."+repeated.current.sPechat,"")
+	 *+IF(repeated.current.sProshiv!="..."," "+"Прош."+repeated.current.sProshiv,"")
+	 *+IF(repeated.current.prodir==true," "+"Продир.","")
+	 *+IF(repeated.current.frez==true," "+"Фрез.","")
+	 *+IF(repeated.current.difersize==true," "+"Полупара","")
+	 *+IF(repeated.current.sPlastizol!="..."," "+"Пл."+repeated.current.sPlastizol,"")
+	 *+IF(repeated.current.attribute!=""," "+"Доп."+repeated.current.attribute,"")
 	 */
+	
 	public static OutDoorOrderRowReq rowToRowReq(OutDoorOrderRow b) {
 		return new OutDoorOrderRowReq(b.getId(), b.getOutDoorOrder().getId(), b.getAttribute(), b.getNumber(),
 				b.getBarcode(), b.getProduct().getId(), b.getProduct().getName(), b.getSize(), b.getColor().getId(),

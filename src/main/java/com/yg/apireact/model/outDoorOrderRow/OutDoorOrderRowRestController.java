@@ -37,7 +37,7 @@ public class OutDoorOrderRowRestController {
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<OutDoorOrderRowReq>> getRowListByOrderId(@RequestParam(name = "orderId", required = true) String orderId) {
 		try {
-			return new ResponseEntity<>(OutDoorOrderRowReq.rowToRowReq(repo.findByOutDoorOrderId(orderId).orElseThrow()), HttpStatus.OK);
+			return new ResponseEntity<>(OutDoorOrderRowReq.rowToRowReq(repo.findByOutDoorOrderIdOrderByDtDesc(orderId).orElseThrow()), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -55,10 +55,22 @@ public class OutDoorOrderRowRestController {
 	}
 
 	@CrossOrigin(origins = { "http://localhost:8082", "http://localhost:3000" }, methods = { RequestMethod.POST })
-	@RequestMapping(value = "{act}", method = { RequestMethod.POST }, produces = MediaType.APPLICATION_JSON_VALUE)
-
-	public ResponseEntity<OutDoorOrderRowReq> post(@RequestBody OutDoorOrderRowReq request) {
+	@RequestMapping(value = "/copy", method = { RequestMethod.POST }, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<OutDoorOrderRowReq> copy(@RequestBody OutDoorOrderRowReq request) {
 		try {
+			request.setId(null);
+			OutDoorOrderRowReq response = service.saveOrUpdate(request);
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	@CrossOrigin(origins = { "http://localhost:8082", "http://localhost:3000" }, methods = { RequestMethod.POST })
+	@RequestMapping(value = "/copySizeUp", method = { RequestMethod.POST }, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<OutDoorOrderRowReq> copySizeUp(@RequestBody OutDoorOrderRowReq request) {
+		try {
+			request.setId(null);
+			request.setSize(String.valueOf(Integer.parseInt(request.getSize())+1));
 			OutDoorOrderRowReq response = service.saveOrUpdate(request);
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception e) {
@@ -68,7 +80,7 @@ public class OutDoorOrderRowRestController {
 	@CrossOrigin(origins = { "http://localhost:8082", "http://localhost:3000" }, methods = { RequestMethod.POST })
 	@RequestMapping(value = "", method = { RequestMethod.POST }, produces = MediaType.APPLICATION_JSON_VALUE)
 
-	public ResponseEntity<OutDoorOrderRowReq> copy(@RequestBody OutDoorOrderRowReq payload) {
+	public ResponseEntity<OutDoorOrderRowReq> save(@RequestBody OutDoorOrderRowReq payload) {
 		try {
 			OutDoorOrderRowReq response = service.saveOrUpdate(payload);
 			return new ResponseEntity<>(response, HttpStatus.OK);
