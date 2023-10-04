@@ -1,8 +1,12 @@
 package com.yg.apireact.utils;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -34,4 +38,36 @@ public class Utils {
 	    	      .atZone(ZoneId.systemDefault())
 	    	      .toLocalDateTime();
 	    	}
+	//day
+	public static LocalDateTime startOfDay() {
+		return LocalDateTime.now(ZoneId.systemDefault()).with(LocalTime.MIN);}
+
+	public static LocalDateTime endOfDay() {
+		return LocalDateTime.now(ZoneId.systemDefault()).with(LocalTime.MAX);}
+
+	public static boolean belongsToCurrentDay(final LocalDateTime localDateTime) {
+	return localDateTime.isAfter(startOfDay()) && localDateTime.isBefore(endOfDay());}
+
+	// note that week starts with Monday
+	public static LocalDateTime startOfWeek() {
+		return LocalDateTime.now(ZoneId.systemDefault())
+		.with(LocalTime.MIN)
+		.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));}
+
+	// note that week ends with Sunday
+	public static LocalDateTime endOfWeek() {
+		return LocalDateTime.now(ZoneId.systemDefault())
+		.with(LocalTime.MAX)
+		.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));}
+	//month
+	public static LocalDateTime startOfMonth() {
+		return LocalDateTime.now(ZoneId.systemDefault())
+		.with(LocalTime.MIN)
+		.with(TemporalAdjusters.firstDayOfMonth());}
+	
+	public static LocalDateTime endOfMonth() {
+		return LocalDateTime.now(ZoneId.systemDefault())
+		.with(LocalTime.MAX)
+		.with(TemporalAdjusters.lastDayOfMonth());
+	}
 }

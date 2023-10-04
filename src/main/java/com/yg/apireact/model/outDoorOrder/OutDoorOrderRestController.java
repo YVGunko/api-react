@@ -1,6 +1,7 @@
 package com.yg.apireact.model.outDoorOrder;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yg.apireact.model.outDoorOrderRow.OutDoorOrderRowService;
+import com.yg.apireact.model.user.UserRepository;
+import com.yg.apireact.utils.Utils;
 
 @RestController
 //we allow cors requests from our frontend environment
@@ -43,33 +46,29 @@ public class OutDoorOrderRestController {
 	@Autowired OutDoorOrderRepository repo;
 	@Autowired OutDoorOrderService service;
 	@Autowired OutDoorOrderRowService rowService;
+	@Autowired UserRepository userRepo;
 
 	@CrossOrigin(origins = { "http://localhost:8082", "http://localhost:3000" }, methods = { RequestMethod.GET,
 			RequestMethod.OPTIONS })
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Map<String, Object>> getOrdersPageable(
-			@RequestParam(name = "customerId", required = false) String customerId,
-			@RequestParam(name = "userId", required = false) String userId,
-			@RequestParam(name = "page", required = false, defaultValue = "0") int page,
-			@RequestParam(name = "size", required = false, defaultValue = "10") int size) {
+	public ResponseEntity<List<OutDoorOrderReq>> getOrders(
+			@RequestParam(name = "userId", required = false) Long userId,
+			@RequestParam(name = "dateFrom", required = false) Date dateFrom,
+			@RequestParam(name = "dateTill", required = false) Date dateTill) {
 
 		try {
-			Pageable paging = PageRequest.of(page, size);
-
-			Page<OutDoorOrder> pageTuts;
-			if (customerId == null) {
-				if (userId != null) // TODO check if user valid
-					pageTuts = repo.findByUserIdOrderByDateDesc(userId, paging);
-				else
-					pageTuts = repo.findAllByOrderByDateDesc(paging);
+			List<OutDoorOrderReq> responce = new ArrayList<>();
+			List<OutDoorOrder> pageTuts = new ArrayList<>();
+			if (dateFrom == null) dateFrom = Utils.toDate(Utils.startOfMonth());
+			if (dateTill == null) dateTill = Utils.toDate(Utils.endOfMonth());
+			if (userId != null) {
+				userRepo.findById(userId).orElseThrow(() -> new IllegalArgumentException(
+						"userId not found exception. userId=".concat(userId.toString())));
+				pageTuts = repo.findByUserIdAndDateBetweenOrderByDateDesc(userId, dateFrom, dateTill).orElseThrow();
 			} else {
-				if (userId != null) // TODO check if user valid
-					pageTuts = repo.findByClientIdAndUserIdOrderByDateDesc(customerId, userId, paging);
-				else
-					pageTuts = repo.findByClientIdOrderByDateDesc(customerId, paging);
+				pageTuts = repo.findByDateBetweenOrderByDateDesc(dateFrom, dateTill).orElseThrow();
 			}
 
-			List<OutDoorOrderReq> responce = new ArrayList<>();
 			for (OutDoorOrder b : pageTuts) {
 				// String id, String sDate, String sClient, String sDivision, String sDesc,
 				// String sUser
@@ -78,13 +77,7 @@ public class OutDoorOrderRestController {
 						String.valueOf(b.getUser().getId()), b.getUser().getName(), b.getSample(), b.getDate()));
 			}
 
-			Map<String, Object> response = new HashMap<>();
-			response.put("orders", responce);
-			response.put("currentPage", pageTuts.getNumber());
-			response.put("totalItems", pageTuts.getTotalElements());
-			response.put("totalPages", pageTuts.getTotalPages());
-
-			return new ResponseEntity<>(response, HttpStatus.OK);
+			return new ResponseEntity<>(responce, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
