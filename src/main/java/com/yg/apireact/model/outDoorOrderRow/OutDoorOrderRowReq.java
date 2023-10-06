@@ -460,6 +460,11 @@ public class OutDoorOrderRowReq {
 		this.barcode = barcode;
 		this.product_id = product_id;
 	}
+	public OutDoorOrderRowReq(String sProduct, Integer number) {
+		super();
+		this.sProduct = sProduct;
+		this.number = number;
+	}
 
 	@JsonProperty("id")
 	private String id;

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.yg.apireact.model.customer.CustomerRepository;
 import com.yg.apireact.model.outDoorOrderRow.OutDoorOrderRowService;
 import com.yg.apireact.model.user.UserRepository;
 import com.yg.apireact.utils.Utils;
@@ -41,6 +42,8 @@ public class OutDoorOrderRestController {
 	OutDoorOrderRowService rowService;
 	@Autowired
 	UserRepository userRepo;
+	@Autowired
+	CustomerRepository clientRepository;
 
 	@CrossOrigin(origins = { "http://localhost:8082", "http://localhost:3000" }, methods = { RequestMethod.GET,
 			RequestMethod.OPTIONS })
@@ -98,7 +101,6 @@ public class OutDoorOrderRestController {
 
 	@CrossOrigin(origins = { "http://localhost:8082", "http://localhost:3000" }, methods = { RequestMethod.POST })
 	@RequestMapping(value = "", method = { RequestMethod.POST }, produces = MediaType.APPLICATION_JSON_VALUE)
-
 	public ResponseEntity<OutDoorOrderReq> post(@RequestBody OutDoorOrderReq request) {
 		try {
 			OutDoorOrderReq response = service.saveOrUpdate(request);
@@ -117,6 +119,17 @@ public class OutDoorOrderRestController {
 		try {
 			OutDoorOrderReq response = service.saveOrUpdate(request);
 			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@CrossOrigin(origins = { "http://localhost:8082", "http://localhost:3000" }, methods = { RequestMethod.POST })
+	@RequestMapping(value = "sendMail", method = { RequestMethod.POST }, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<String> sendOrder(@RequestParam(value = "id", required = true) String id) throws Exception {
+		try {
+			service.sendMail(id);
+			return new ResponseEntity<>("Ok", HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}

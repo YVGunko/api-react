@@ -2,10 +2,8 @@ package com.yg.apireact.model.outDoorOrder;
 
 import java.util.Date;
 
-import javax.annotation.PostConstruct;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -13,17 +11,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.yg.apireact.model.user.User;
 import com.yg.apireact.model.customer.Customer;
 import com.yg.apireact.model.division.Division;
-
-import com.yg.apireact.model.outDoorOrderRow.OutDoorOrderRowService;
+import com.yg.apireact.model.user.User;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
