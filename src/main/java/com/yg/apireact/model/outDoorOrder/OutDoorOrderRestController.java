@@ -3,7 +3,6 @@ package com.yg.apireact.model.outDoorOrder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.eclipsesource.json.Json;
+import com.eclipsesource.json.JsonObject;
 import com.yg.apireact.model.customer.CustomerRepository;
 import com.yg.apireact.model.outDoorOrderRow.OutDoorOrderRowService;
 import com.yg.apireact.model.user.UserRepository;
@@ -126,10 +127,12 @@ public class OutDoorOrderRestController {
 
 	@CrossOrigin(origins = { "http://localhost:8082", "http://localhost:3000" }, methods = { RequestMethod.POST })
 	@RequestMapping(value = "sendMail", method = { RequestMethod.POST }, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<String> sendOrder(@RequestParam(value = "id", required = true) String id) throws Exception {
+	public ResponseEntity<String> sendOrder(@RequestParam String id) throws Exception {
 		try {
 			service.sendMail(id);
-			return new ResponseEntity<>("Ok", HttpStatus.OK);
+			JsonObject answer = Json.object().add("answer", "Ok");
+
+			return new ResponseEntity<String>(answer.toString(), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
