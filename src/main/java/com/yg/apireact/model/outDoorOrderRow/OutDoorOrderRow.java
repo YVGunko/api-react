@@ -322,7 +322,7 @@ public class OutDoorOrderRow {
 		this.tert = (tert != null) ? tert : false;
 		this.frez = (frez != null) ? frez : false;
 		this.sample = (sample != null) ? sample : false;
-		this.createdAt = createAt;
+		this.createdAt = (createAt != null) ? createAt : new Date();
 	}
 
 	public String getId() {

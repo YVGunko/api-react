@@ -3,6 +3,7 @@ package com.yg.apireact.model.outDoorOrder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,6 +112,22 @@ public class OutDoorOrderRestController {
 		}
 	}
 
+	@CrossOrigin(origins = { "http://localhost:8082", "http://localhost:3000" }, methods = { RequestMethod.POST })
+	@RequestMapping(value = "/copy", method = { RequestMethod.POST }, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<OutDoorOrderReq> copy(@RequestBody OutDoorOrderReq request) {
+		try {
+			String savedId = request.getId();
+			//have to make new instance in order to be saved by hibernate
+			OutDoorOrderReq response = service.copy(request);
+			// get rows by saveId and make them copy having orderId replaced with
+			// response.getId();
+			rowService.copyRows(savedId, OutDoorOrder.orderReqToOrder(response));
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 	@CrossOrigin(origins = { "http://localhost:8082", "http://localhost:3000" }, methods = { RequestMethod.PUT,
 			RequestMethod.PATCH })
 	@RequestMapping(value = "{id}", method = { RequestMethod.PUT,
@@ -129,7 +146,7 @@ public class OutDoorOrderRestController {
 	@RequestMapping(value = "sendMail", method = { RequestMethod.POST }, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> sendOrder(@RequestParam String id) throws Exception {
 		try {
-			service.sendMail(id);
+			// TODO remove !!! service.sendMail(id);
 			JsonObject answer = Json.object().add("answer", "Ok");
 
 			return new ResponseEntity<String>(answer.toString(), HttpStatus.OK);

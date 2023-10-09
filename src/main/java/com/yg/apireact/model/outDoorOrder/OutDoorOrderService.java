@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,8 @@ import com.yg.apireact.utils.Utils;
 
 @Service
 public class OutDoorOrderService {
+	private static final Logger log = LoggerFactory.getLogger(OutDoorOrderRowService.class);
+
 	@Autowired
 	OutDoorOrderRepository repo;
 	@Autowired
@@ -35,7 +39,7 @@ public class OutDoorOrderService {
 	private EmailSenderService emailService;
 	@Autowired
 	private OutDoorOrderRowService rowService;
-	
+
 	public String getNextOrderNumber(String client_id) throws Exception {
 		String responce = null;
 		if (client_id != null) {
@@ -69,14 +73,12 @@ public class OutDoorOrderService {
 		final Customer customer = customerRepo.findById(repo.findById(id).orElseThrow().getCustomer().getId())
 				.orElseThrow();
 		final OutDoorOrder ord = repo.findById(id).orElseThrow();
-		final String bccMail = ord.getSample()
-				? defaultsRepository.findById("samplesMail").get().name
+		final String bccMail = ord.getSample() ? defaultsRepository.findById("samplesMail").get().name
 				: defaultsRepository.findById("ordersMail").get().name;
 		if (customer.getEmail() == null)
 			throw new Exception("Не указан eMail.");
 		if (customer.getName() == null)
 			throw new Exception("Не указан eMail.");
-
 
 		Mail mail = new Mail();
 		mail.setFrom("stilplastservicemail@gmail.com");// replace with your desired email
@@ -89,12 +91,28 @@ public class OutDoorOrderService {
 		model.put("rows", rowService.getRows(id));
 		model.put("orderNumber", id);
 		model.put("orderDate", Utils.toStringOnlyDate(Utils.toLocalDate(ord.getDate())));
-		model.put("orderSample", ord.getSample() ? "Образцы." : "Серия." );
+		model.put("orderSample", ord.getSample() ? "Образцы." : "Серия.");
 
 		mail.setProps(model);
-		emailService.sendEmail(mail, "mailOrder");		
+		emailService.sendEmail(mail, "mailOrder");
 
 		return (true);
 	}
-	
+
+	public OutDoorOrderReq copy(OutDoorOrderReq request) throws Exception {
+		try {
+			request.setId(getNextOrderNumber(request.customer_id));
+			request.setDate(new Date());
+			OutDoorOrder dest = new OutDoorOrder(getNextOrderNumber(request.customer_id), request.getComment(),
+					request.getDate(), request.getDate(), request.getDate(), new Division(request.getDivision_code()),
+					new User(Long.valueOf(request.getUser_id())), new Customer(request.getCustomer_id()),
+					request.getSample());
+
+			return saveOrUpdate(OutDoorOrderReq.orderToOrderReq(dest));
+		} catch (Exception e) {
+			log.error("OutDoorOrderReq copy -> ", e);
+			throw new Exception("OutDoorOrderReq copy -> ", e);
+		}
+	}
+
 }
