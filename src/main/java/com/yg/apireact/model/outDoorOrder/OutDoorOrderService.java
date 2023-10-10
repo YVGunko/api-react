@@ -116,7 +116,7 @@ public class OutDoorOrderService {
 
 			return saveOrUpdate(OutDoorOrderReq.orderToOrderReq(dest));
 		} catch (Exception e) {
-			log.error("OutDoorOrderReq copy -> ", e);
+			log.error("OutDoorOrderReq copy -> ", e.getMessage());
 			throw new Exception("OutDoorOrderReq copy -> ", e);
 		}
 	}

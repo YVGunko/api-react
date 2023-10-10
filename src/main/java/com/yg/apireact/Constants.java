@@ -8,7 +8,8 @@ public final class Constants {
 	public static final String PU_DIVISION = "00-000002";
 	public static final String EVA_DIVISION = "00-000047";
 	public static final String EXTERNAL_USER = "ROLE_EXTERNAL";
-	public static final String ORDER_MAKER = "ROLE_ORDER_MAKER";
+	public static final String ROLE_ORDER_MAKER = "ROLE_ORDER_MAKER";
+	public static final String ROLE_ORDER = "ROLE_ORDER";
 	
 	private Constants() {
 	    //this prevents even the native class from 

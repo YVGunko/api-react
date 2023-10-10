@@ -6,6 +6,7 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -114,14 +115,26 @@ public class OutDoorOrderRestController {
 
 	@CrossOrigin(origins = { "http://localhost:8082", "http://localhost:3000" }, methods = { RequestMethod.POST })
 	@RequestMapping(value = "sendMail", method = { RequestMethod.POST }, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<String> sendOrder(@RequestParam String id) throws Exception {
+	public ResponseEntity<?> sendOrder(@RequestParam String id) throws Exception {
 		try {
 			// TODO remove !!! service.sendMail(id);
-			JsonObject answer = Json.object().add("answer", "Ok");
+			// JsonObject answer = Json.object().add("answer", "Ok");
 
-			return new ResponseEntity<String>(answer.toString(), HttpStatus.OK);
+			return ResponseEntity.accepted().build();// <String>(answer.toString(), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@CrossOrigin(origins = { "http://localhost:8082", "http://localhost:3000" }, methods = { RequestMethod.DELETE,
+			RequestMethod.OPTIONS })
+	@RequestMapping(value = "{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> delete(@PathVariable String id) {
+		try {
+			repo.deleteById(id);
+			return ResponseEntity.noContent().build();
+		} catch (EmptyResultDataAccessException e) {
+			return ResponseEntity.notFound().build();
 		}
 	}
 }

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.yg.apireact.model.filial.FilialService;
 import com.yg.apireact.model.user.Role;
 import com.yg.apireact.model.user.User;
 import com.yg.apireact.model.user.UserRepository;
@@ -36,6 +37,8 @@ import com.yg.apireact.model.user.UserToken;
 public class LoginController {
 	@Autowired
 	UserRepository userRepository;
+	@Autowired
+	FilialService fservice;
 	
 	private static final Logger log = LoggerFactory.getLogger(LoginController.class);
 	
@@ -59,7 +62,8 @@ public class LoginController {
         	userToken.setId(user.getId());
         	userToken.setPswd("***");
         	userToken.setRoles(user.getRoles().stream().map(Role::getName).collect(Collectors.joining(",")));
-        	userToken.setFilial_id(user.getFilial_id().toString());
+        	userToken.setFilial_id(user.getFilial_id());
+        	userToken.setFilial(fservice.getName(user.getFilial_id()));
         	return new ResponseEntity<>(userToken, headers, HttpStatus.CREATED);
         } catch (RuntimeException e) {
         	return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

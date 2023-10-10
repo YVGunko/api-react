@@ -1,7 +1,9 @@
 package com.yg.apireact.model.user;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yg.apireact.Constants;
+import com.yg.apireact.model.filial.FilialService;
 
 @RestController
 @CrossOrigin(origins = { "http://localhost:8082", "http://localhost:3000" }, methods = { RequestMethod.GET,
@@ -27,6 +30,8 @@ public class UserRestController {
 	private static final Logger log = LoggerFactory.getLogger(UserRestController.class);
 	@Autowired
 	UserRepository userRepository;
+	@Autowired
+	FilialService fservice;
 
 	@CrossOrigin(origins = { "http://localhost:8082", "http://localhost:3000" }, methods = { RequestMethod.GET,
 			RequestMethod.OPTIONS })
@@ -41,9 +46,14 @@ public class UserRestController {
 			}
 			List<User> listU = Streamable.of(iterableU)
 					.filter(user -> (user.getRoles().stream()
-							.filter(role -> (role.getName().contains(Constants.ORDER_MAKER))).count()>0))
+							.filter(role -> (role.getName().contains(Constants.ROLE_ORDER))).count()>0))
 					.toList();
-			List<UserToken> response = UserToken.userToUserToken(listU);
+			List<UserToken> response = new ArrayList<UserToken>();
+			listU.forEach(u -> {
+				response.add(new UserToken(u.getId(), u.getName(), "***", 
+		 				u.getRoles().stream().map(Role::getName).collect(Collectors.joining(",")),
+		 				u.getFilial_id(), fservice.getName(u.getFilial_id())));
+			});
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
