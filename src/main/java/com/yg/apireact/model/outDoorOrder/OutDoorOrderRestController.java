@@ -1,6 +1,5 @@
 package com.yg.apireact.model.outDoorOrder;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,10 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
-import com.yg.apireact.model.customer.CustomerRepository;
 import com.yg.apireact.model.outDoorOrderRow.OutDoorOrderRowService;
-import com.yg.apireact.model.user.UserRepository;
-import com.yg.apireact.utils.Utils;
 
 @RestController
 //we allow cors requests from our frontend environment
@@ -34,51 +30,25 @@ import com.yg.apireact.utils.Utils;
 		RequestMethod.HEAD })
 @RequestMapping("/api/orders")
 public class OutDoorOrderRestController {
-	private static final int DETAILS_LENGTH = 25;
-
 	@Autowired
 	OutDoorOrderRepository repo;
 	@Autowired
 	OutDoorOrderService service;
 	@Autowired
 	OutDoorOrderRowService rowService;
-	@Autowired
-	UserRepository userRepo;
-	@Autowired
-	CustomerRepository clientRepository;
 
 	@CrossOrigin(origins = { "http://localhost:8082", "http://localhost:3000" }, methods = { RequestMethod.GET,
 			RequestMethod.OPTIONS })
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<OutDoorOrderReq>> getOrders(@RequestParam(name = "userId", required = false) Long userId,
 			@RequestParam(name = "dateFrom", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date dateFrom,
-			@RequestParam(name = "dateTill", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date dateTill) {
+			@RequestParam(name = "dateTill", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date dateTill,
+			@RequestParam(name = "filial", required = false) Long filial,
+			@RequestParam(name = "customer", required = false) String customer,
+			@RequestParam(name = "division", required = false) String division) {
 
 		try {
-			List<OutDoorOrderReq> responce = new ArrayList<>();
-			List<OutDoorOrder> pageTuts = new ArrayList<>();
-			if (dateFrom == null)
-				dateFrom = Utils.toDate(Utils.startOfMonth());
-			if (dateTill == null)
-				dateTill = Utils.toDate(Utils.endOfMonth());
-			if (userId != null) {
-				userRepo.findById(userId).orElseThrow(() -> new IllegalArgumentException(
-						"userId not found exception. userId=".concat(userId.toString())));
-				pageTuts = repo.findByUserIdAndDateBetweenOrderByDateDesc(userId, dateFrom, dateTill).orElseThrow();
-			} else {
-				pageTuts = repo.findByDateBetweenOrderByDateDesc(dateFrom, dateTill).orElseThrow();
-			}
-
-			for (OutDoorOrder b : pageTuts) {
-				// String id, String sDate, String sClient, String sDivision, String sDesc,
-				// String sUser
-				responce.add(new OutDoorOrderReq(b.getId(), b.getComment(),
-						rowService.getGoods(b.getId(), DETAILS_LENGTH), b.getCustomer().getId(),
-						b.getCustomer().getName(), b.getDivision().getCode(), b.getDivision().getName(),
-						String.valueOf(b.getUser().getId()), b.getUser().getName(), b.getSample(), b.getDate()));
-			}
-
-			return new ResponseEntity<>(responce, HttpStatus.OK);
+			return new ResponseEntity<>(service.find(dateFrom, dateTill, userId, filial, division, customer), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -92,7 +62,7 @@ public class OutDoorOrderRestController {
 		try {
 			OutDoorOrder b = repo.findById(id).orElseThrow();
 			OutDoorOrderReq response = new OutDoorOrderReq(b.getId(), b.getComment(),
-					rowService.getGoods(b.getId(), DETAILS_LENGTH), b.getCustomer().getId(), b.getCustomer().getName(),
+					rowService.getGoods(b.getId(), OutDoorOrderService.DETAILS_LENGTH), b.getCustomer().getId(), b.getCustomer().getName(),
 					b.getDivision().getCode(), b.getDivision().getName(), String.valueOf(b.getUser().getId()),
 					b.getUser().getName(), b.getSample(), b.getDate());
 			return new ResponseEntity<>(response, HttpStatus.OK);
@@ -117,7 +87,7 @@ public class OutDoorOrderRestController {
 	public ResponseEntity<OutDoorOrderReq> copy(@RequestBody OutDoorOrderReq request) {
 		try {
 			String savedId = request.getId();
-			//have to make new instance in order to be saved by hibernate
+			// have to make new instance in order to be saved by hibernate
 			OutDoorOrderReq response = service.copy(request);
 			// get rows by saveId and make them copy having orderId replaced with
 			// response.getId();

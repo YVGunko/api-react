@@ -65,6 +65,19 @@ public class OutDoorOrder {
 		this.sample = sample;
 	}
 
+	public OutDoorOrder(String id, String comment, Date date,  
+			String division_code, Long idUser, String clientId, Boolean sample) {
+		super();
+		this.id = id;
+		this.user = new User (idUser);
+		this.comment = comment;
+		this.date = date;
+		this.receivedFromMobileDate = date;
+		this.division = new Division (division_code,"");
+		this.client = new Customer (clientId);
+		this.sample = sample;
+	}
+	
 	public OutDoorOrder(String id, String comment, Date date, Division division, User user, Customer client,
 			Boolean sample) {
 		super();

@@ -59,6 +59,7 @@ public class LoginController {
         	userToken.setId(user.getId());
         	userToken.setPswd("***");
         	userToken.setRoles(user.getRoles().stream().map(Role::getName).collect(Collectors.joining(",")));
+        	userToken.setFilial_id(user.getFilial_id().toString());
         	return new ResponseEntity<>(userToken, headers, HttpStatus.CREATED);
         } catch (RuntimeException e) {
         	return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

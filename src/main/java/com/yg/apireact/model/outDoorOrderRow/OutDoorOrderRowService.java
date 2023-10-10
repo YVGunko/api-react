@@ -3,10 +3,10 @@ package com.yg.apireact.model.outDoorOrderRow;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -93,70 +93,16 @@ public class OutDoorOrderRowService {
 		return OutDoorOrderRowReq.rowToRowReq(tmp);
 	}
 
-	public void saveOrUpdate(List<OutDoorOrderRow> list) throws Exception {
-		final List<String> listOfOrderId = list.stream().map(OutDoorOrderRow::getOutDoorOrder).map(OutDoorOrder::getId)
-				.distinct().collect(Collectors.toList());
-		listOfOrderId.forEach(
-				order -> 
-				{
-					log.debug("saveOrUpdate listOfOrderId.forEach order -> ", order);
-			final OutDoorOrder outDoorOrder = orderRepository.findById(order).orElseThrow();
-			list.forEach(
-					request -> 
-					{
-				final String id = StringUtils.isNotBlank(request.getId()) ? request.getId()
-						: UUID.randomUUID().toString();
-				log.debug("saveOrUpdate OutDoorOrderRow.forEach row -> ", request);
-				try {
-				repository.save(new OutDoorOrderRow(id,
-						new OutDoorOrder(outDoorOrder.getId(), outDoorOrder.getComment(), outDoorOrder.getDate(),
-								outDoorOrder.getDivision(), outDoorOrder.getUser(), outDoorOrder.getCustomer(),
-								outDoorOrder.getSample()),
-						request.getAttribute(), request.getNumber(), request.getBarcode(), 
-						request.getProduct().getId(),
-						request.getSize(), 
-						request.getColor().getId(), 
-						request.getLiner().getId(),
-						request.getRant().getId(), 
-						request.getShpalt().getId(), 
-						request.getVstavka().getId(),
-						request.getGelenok().getId(), 
-						request.getGuba().getId(), 
-						request.getKabluk().getId(),
-						request.getMatirovka().getId(), 
-						request.getPechat().getId(), 
-						request.getProshiv().getId(),
-						request.getPyatka().getId(), 
-						request.getSled().getId(), 
-						request.getSpoyler().getId(),
-						request.getAshpalt().getId(), 
-						request.getProdir(), 
-						request.getDifersize(), 
-						request.getTert(),
-						request.getFrez(), 
-						request.getSample(), 
-						request.getPlastizol().getId(),
-						request.getCreatedAt()));
-				} catch (Exception e) {
-					log.error("saveOrUpdate exception saving row -> ", e);
-				}
-			}
-					);
-		});
-	}
-
 	public void copyRows(String sourceId, OutDoorOrder dest) throws Exception {
 		List<OutDoorOrderRow> sourceRows = repository.findByOutDoorOrderIdOrderByCreatedAtDesc(sourceId).orElseThrow();
-		List<OutDoorOrderRow> destRows = new ArrayList<OutDoorOrderRow>();
 		sourceRows.forEach(row -> {
 			try {
 				copy(row, dest);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.error("OutDoorOrderReq copy -> ", e);
+				throw new RuntimeException("OutDoorOrderReq copy -> ", e);
 			}
 		});
-		//saveOrUpdate(destRows);
 	}
 
 	// for sendMail only

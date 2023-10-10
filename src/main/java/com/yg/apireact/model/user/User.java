@@ -64,6 +64,9 @@ public class User implements UserDetails {
 	@Column(name = "employee_id", columnDefinition="BIGINT(20) default '0'")
 	private Long employee_id;
 	
+	@Column(name = "filial_id", columnDefinition="BIGINT(20) default '0'")
+	private Long filial_id;
+	
 	@JsonFormat(pattern="dd.MM.yyyy HH:mm:ss",timezone="Europe/Moscow")
 	@Column(name = "dt", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Date dt ;
@@ -142,6 +145,7 @@ public class User implements UserDetails {
 		this.superUser = superUser;
 		this.external = external;
 		this.employee_id = 0L;
+		this.filial_id = 0L;
 		this.dt = new Date();
 	}
 	public User(Long id) {
@@ -152,6 +156,7 @@ public class User implements UserDetails {
 		this.superUser = false;
 		this.external = false;
 		this.employee_id = 0L;
+		this.filial_id = 0L;
 		this.dt = new Date();
 	}
 
@@ -220,6 +225,7 @@ public class User implements UserDetails {
         		", dt=" + dt +
         		", external=" + external +
         		", employee_id=" + employee_id +
+        		", filial_id=" + filial_id +
         		", version=" + version +
         		'}';
     }
@@ -235,11 +241,20 @@ public class User implements UserDetails {
 			Objects.equals(dt, client.dt) &&
 			Objects.equals(external, client.external) &&
 			Objects.equals(employee_id, client.employee_id) &&
+			Objects.equals(filial_id, client.filial_id) &&
 			Objects.equals(version, client.version);
 	}
 	@Override
 	public int hashCode() {
 
-		return Objects.hash(id, name, pswd, superUser, dt, external, employee_id, version);
+		return Objects.hash(id, name, pswd, superUser, dt, external, employee_id, filial_id, version);
+	}
+
+	public Long getFilial_id() {
+		return filial_id;
+	}
+
+	public void setFilial_id(Long filial_id) {
+		this.filial_id = filial_id;
 	}
 }
