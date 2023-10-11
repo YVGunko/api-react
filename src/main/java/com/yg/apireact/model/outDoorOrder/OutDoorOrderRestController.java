@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.eclipsesource.json.Json;
-import com.eclipsesource.json.JsonObject;
 import com.yg.apireact.model.outDoorOrderRow.OutDoorOrderRowService;
 
 @RestController
@@ -44,9 +42,9 @@ public class OutDoorOrderRestController {
 	public ResponseEntity<List<OutDoorOrderReq>> getOrders(@RequestParam(name = "userId", required = false) Long userId,
 			@RequestParam(name = "dateFrom", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date dateFrom,
 			@RequestParam(name = "dateTill", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date dateTill,
-			@RequestParam(name = "filial", required = false) Long filial,
-			@RequestParam(name = "customer", required = false) String customer,
-			@RequestParam(name = "division", required = false) String division) {
+			@RequestParam(name = "filial_id", required = false) Long filial,
+			@RequestParam(name = "customer_id", required = false) String customer,
+			@RequestParam(name = "division_code", required = false) String division) {
 
 		try {
 			return new ResponseEntity<>(service.find(dateFrom, dateTill, userId, filial, division, customer), HttpStatus.OK);

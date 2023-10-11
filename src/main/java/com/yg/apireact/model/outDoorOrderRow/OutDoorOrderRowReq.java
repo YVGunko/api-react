@@ -607,6 +607,14 @@ public class OutDoorOrderRowReq {
 	 * Boolean prodir, Boolean difersize, Boolean tert, Boolean frez, Boolean
 	 * sample, String plastizol_id, String sPlastizol
 	 *
+	 *repeated.current.sProduct
+	 *+IF(repeated.current.sColor!="..."," "+repeated.current.sColor,"")
+	 *+IF(repeated.current.sLiner!="..."," Подкл."+repeated.current.sLiner,"")
+	 *+IF(repeated.current.sRant!="..."," Рант."+repeated.current.sRant,"")
+	 *+IF(repeated.current.sShpalt!="..."," Шпал."+repeated.current.sShpalt,"")
+	 *+IF(repeated.current.size!="0"," р."+repeated.current.size,"")
+	 *+IF(repeated.current.sample==true,", Образец.","")
+	 *
 	 *IF(repeated.current.sVstavka!="...","Вст."+repeated.current.sVstavka,"")
 	 *+IF(repeated.current.sAshpalt!="..."," "
 	 *+IF(params.ppDivisionCode==appVars.tepCode,"Шпал.","Крас.")+repeated.current.sAshpalt,"")
