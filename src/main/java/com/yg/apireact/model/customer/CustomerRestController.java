@@ -1,5 +1,6 @@
 package com.yg.apireact.model.customer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +46,24 @@ public class CustomerRestController {
 	@CrossOrigin(origins = { "http://localhost:8082", "http://localhost:3000" }, methods = { RequestMethod.GET,
 			RequestMethod.OPTIONS })
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Map<String, Object>> getAllTutorials(
+	public ResponseEntity<List<Customer>> getAll(
+			@RequestParam(name = "title", required = false) String title) {
+		List<Customer> response = new ArrayList<Customer>();
+		try {
+			if (title == null)
+				response = customerRepository.findAllByOrderByName().orElseThrow();
+			else
+				response = customerRepository.findByNameContainingOrderByName(title).orElseThrow();
+
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	@CrossOrigin(origins = { "http://localhost:8082", "http://localhost:3000" }, methods = { RequestMethod.GET,
+			RequestMethod.OPTIONS })
+	@RequestMapping(value = "/paginated", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Map<String, Object>> getPaginated(
 			@RequestParam(name = "title", required = false) String title,
 			@RequestParam(name = "page", required = false, defaultValue = "0") int page,
 			@RequestParam(name = "size", required = false, defaultValue = "10") int size) {

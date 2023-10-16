@@ -1,5 +1,6 @@
 package com.yg.apireact.model.customer;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -12,5 +13,7 @@ public interface CustomerRepository extends PagingAndSortingRepository<Customer,
 	Page<Customer> findByNameContainingOrderByName(String name, Pageable pageable);
 	Optional<Customer> findById(String id);
 	Page<Customer> findAllByOrderByName(Pageable paging);
+	Optional<List<Customer>> findAllByOrderByName();
+	Optional<List<Customer>> findByNameContainingOrderByName(String name);
 
 }
