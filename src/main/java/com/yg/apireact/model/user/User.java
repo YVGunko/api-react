@@ -52,7 +52,7 @@ public class User implements UserDetails {
 	private String name;
 	
 	@NotNull
-	@Column(name = "pswd", columnDefinition="default '0a1s2d3f'")
+	@Column(name = "pswd", columnDefinition="default '012345'")
 	private @JsonIgnore String pswd;
 	
 	@Column(name = "super_user", columnDefinition="bit default 0")
@@ -77,11 +77,42 @@ public class User implements UserDetails {
 	public Boolean getExternal() {
 		return external;
 	}
+	@Column(name = "expired", columnDefinition="bit default 0")
+	private @JsonIgnore boolean expired;
+	
+	@Column(name = "locked", columnDefinition="bit default 0")
+	private @JsonIgnore boolean locked;
 
+	public void setExpired(boolean expired) {
+		this.expired = expired;
+	}
+
+	public void setLocked(boolean locked) {
+		this.locked = locked;
+	}
+	@Override
+	public boolean isAccountNonExpired() {
+		return !expired;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return !locked;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return !expired;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return !locked;
+	}
 	public void setExternal(Boolean external) {
 		this.external = external;
 	}
-	@Size(min=5, message = "Не меньше 5 знаков")
+	@Size(min=8, max=32, message = "Не меньше 8 знаков, не больше 32")
 	private  @JsonIgnore String password;
     @Transient
     private  @JsonIgnore String passwordConfirm;
@@ -195,26 +226,6 @@ public class User implements UserDetails {
 	public String getUsername() {
 		return name;
 	}
-
-	@Override
-	public boolean isAccountNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		return true;
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return true;
-	}
 	
     @Override
     public String toString() {
@@ -226,6 +237,8 @@ public class User implements UserDetails {
         		", external=" + external +
         		", employee_id=" + employee_id +
         		", filial_id=" + filial_id +
+        		", expired=" + expired +
+        		", locked=" + locked +
         		", version=" + version +
         		'}';
     }
@@ -242,12 +255,13 @@ public class User implements UserDetails {
 			Objects.equals(external, client.external) &&
 			Objects.equals(employee_id, client.employee_id) &&
 			Objects.equals(filial_id, client.filial_id) &&
+			Objects.equals(expired, client.expired) &&
+			Objects.equals(locked, client.locked) &&
 			Objects.equals(version, client.version);
 	}
 	@Override
 	public int hashCode() {
-
-		return Objects.hash(id, name, pswd, superUser, dt, external, employee_id, filial_id, version);
+		return Objects.hash(id, name, pswd, superUser, dt, external, employee_id, filial_id, expired, locked, version);
 	}
 
 	public Long getFilial_id() {

@@ -70,9 +70,6 @@ public class WebConfig  {
 			
 			.and().exceptionHandling().accessDeniedPage("/403")
 		.and()
-			.formLogin()
-			//.failureHandler(authenticationFailureHandler())
-		.and()
 			.httpBasic()
 		.and().logout().permitAll().and().csrf().disable()
 		.logout()                                                                

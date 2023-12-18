@@ -16,6 +16,8 @@ public class OutDoorOrderReq {
 	public String comment;
 	@JsonProperty("details")
 	public String details;
+	@JsonProperty("ordnum")
+	public String ordnum;
 	
 	@JsonProperty("customer_id")
 	public String customer_id ;
@@ -44,7 +46,7 @@ public class OutDoorOrderReq {
  				b.getCustomer().getId(), b.getCustomer().getName(),
  				b.getDivision().getCode(), b.getDivision().getName(),  
  				String.valueOf(b.getUser().getId()), b.getUser().getName(), 
- 				b.getSample(), b.getDate());		
+ 				b.getSample(), b.getDate(), b.getOrdnum());		
  	}
  	public static List<OutDoorOrderReq> orderToOrderReq (List<OutDoorOrder> listOfOutDoorOrder) {
  		return listOfOutDoorOrder.stream().map(b -> orderToOrderReq(b)).collect(Collectors.toList());		
@@ -55,7 +57,7 @@ public class OutDoorOrderReq {
 	}
 
 	public OutDoorOrderReq(String id, String comment, String details, String customer_id, String customer_name, String division_code,
-			String division_name, String user_id, String user_name, Boolean sample, Date date) {
+			String division_name, String user_id, String user_name, Boolean sample, Date date, String ordnum) {
 		super();
 		this.id = id;
 		this.comment = comment;
@@ -68,9 +70,10 @@ public class OutDoorOrderReq {
 		this.user_name = user_name;
 		this.sample = sample;
 		this.date = date;
+		this.ordnum = ordnum;
 	}
 	public OutDoorOrderReq(String id, String comment, String details, String customer_id, String customer_name, String division_code,
-			String division_name, String user_id, String user_name, Boolean sample, String date) {
+			String division_name, String user_id, String user_name, Boolean sample, String date, String ordnum) {
 		super();
 		this.id = id;
 		this.comment = comment;
@@ -83,8 +86,9 @@ public class OutDoorOrderReq {
 		this.user_name = user_name;
 		this.sample = sample;
 		this.date = new Date();
+		this.ordnum = ordnum;
 	}
-	public OutDoorOrderReq(String id, String comment, String user_id, String customer_id, String division_code, Boolean sample) {
+	public OutDoorOrderReq(String id, String comment, String user_id, String customer_id, String division_code, Boolean sample, String ordnum) {
 		super();
 		this.id = id;
 		this.user_id = user_id;
@@ -95,6 +99,7 @@ public class OutDoorOrderReq {
 		this.division_name = "";
 		this.customer_id = customer_id;
 		this.sample = sample;
+		this.ordnum = ordnum;
 	}
 	
 	public Boolean getSample() {
@@ -167,5 +172,11 @@ public class OutDoorOrderReq {
 	}
 	public void setCustomer_name(String customer_name) {
 		this.customer_name = customer_name;
+	}
+	public String getOrdnum() {
+		return ordnum;
+	}
+	public void setOrdnum(String ordnum) {
+		this.ordnum = ordnum;
 	}
 }

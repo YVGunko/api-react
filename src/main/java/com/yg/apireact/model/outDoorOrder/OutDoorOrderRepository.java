@@ -35,12 +35,16 @@ public interface OutDoorOrderRepository extends PagingAndSortingRepository<OutDo
     		+ " and (:division IS NULL or division.code=:division)  \n"
     		+ " and (:customer IS NULL or client.id=:customer)  \n"
     		+ " ORDER BY date desc  \n")
-	Optional<List<OutDoorOrder>> find(@Param("d1") Date from, @Param("d2") Date till, 
+	List<OutDoorOrder> find(@Param("d1") Date from, @Param("d2") Date till, 
 			@Param("user") Long user, 
 			@Param("filial") String filial, 
 			@Param("division") String division,
 			@Param("customer") String customer);
 
+	@Query(value="select sum(number) from out_door_order_row \n"+
+			" where out_door_order_id = ?1", nativeQuery=true)
+	Long getOrderTotal(String id);
+	
 }
 /*
  * 

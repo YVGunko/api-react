@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.eclipsesource.json.Json;
+import com.eclipsesource.json.JsonObject;
 import com.yg.apireact.model.outDoorOrderRow.OutDoorOrderRowService;
 
 @RestController
@@ -47,7 +49,8 @@ public class OutDoorOrderRestController {
 			@RequestParam(name = "division_code", required = false) String division) {
 
 		try {
-			return new ResponseEntity<>(service.find(dateFrom, dateTill, userId, filial, division, customer), HttpStatus.OK);
+			return new ResponseEntity<>(service.find(dateFrom, dateTill, userId, filial, division, customer),
+					HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -61,9 +64,10 @@ public class OutDoorOrderRestController {
 		try {
 			OutDoorOrder b = repo.findById(id).orElseThrow();
 			OutDoorOrderReq response = new OutDoorOrderReq(b.getId(), b.getComment(),
-					rowService.getGoods(b.getId(), OutDoorOrderService.DETAILS_LENGTH), b.getCustomer().getId(), b.getCustomer().getName(),
-					b.getDivision().getCode(), b.getDivision().getName(), String.valueOf(b.getUser().getId()),
-					b.getUser().getName(), b.getSample(), b.getDate());
+					rowService.getGoods(b.getId(), OutDoorOrderService.DETAILS_LENGTH), b.getCustomer().getId(),
+					b.getCustomer().getName(), b.getDivision().getCode(), b.getDivision().getName(),
+					String.valueOf(b.getUser().getId()), b.getUser().getName(), b.getSample(), b.getDate(),
+					b.getOrdnum());
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -112,18 +116,19 @@ public class OutDoorOrderRestController {
 	}
 
 	@CrossOrigin(origins = { "http://localhost:8082", "http://localhost:3000" }, methods = { RequestMethod.POST })
-	@RequestMapping(value = "sendMail", method = { RequestMethod.POST }, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/sendMail", method = { RequestMethod.POST }, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> sendOrder(@RequestParam String id) throws Exception {
 		try {
-			// TODO remove !!! service.sendMail(id);
-			// JsonObject answer = Json.object().add("answer", "Ok");
-
-			return ResponseEntity.accepted().build();// <String>(answer.toString(), HttpStatus.OK);
+			service.sendMail(id);
+			JsonObject answer = Json.object().add("answer", "Ok");
+			//ResponseEntity.ok("Ok");
+			return new ResponseEntity<String>(answer.toString(), HttpStatus.OK);
+			// return ResponseEntity.accepted().build();// <String>(answer.toString(), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	@CrossOrigin(origins = { "http://localhost:8082", "http://localhost:3000" }, methods = { RequestMethod.DELETE,
 			RequestMethod.OPTIONS })
 	@RequestMapping(value = "{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)

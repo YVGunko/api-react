@@ -22,7 +22,7 @@
                     <h3 th:case="null">Заказ пуст!</h3>
                     <div th:case="*">
                         <h3 class="my-5">Заказ №<span th:text="${orderNumber}"></span> от <span th:text="${orderDate}"></span>. <span th:text="${orderSample}"></span></h3>
-                        
+                        <h3 class="my-5">Клиент: <span th:text="${clientName}"></span></h3>
                         <table border="1" class="table table-responsive-md text-nowrap">
                             <thead class="thead-dark">
                                 <tr>
@@ -37,6 +37,7 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <h3 class="my-5">Всего, шт.: <span th:text="${orderTotal}"></span></h3>
                     </div>                      
                 </div>
             </div>

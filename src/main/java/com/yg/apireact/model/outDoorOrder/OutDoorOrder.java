@@ -26,7 +26,8 @@ public class OutDoorOrder {
 	private String id;
 	private String comment;
 	private Boolean sample;
-
+	private String ordnum;
+	
 	@NotNull
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	@JoinColumn(name = "client_id", columnDefinition = "VARCHAR(255) default '0'")
@@ -52,7 +53,7 @@ public class OutDoorOrder {
 	private Date receivedFromMobileDate;
 
 	public OutDoorOrder(String id, String comment, Date date, Date receivedFromMobileDate, Date sentToMasterDate,
-			Division division, User user, Customer client, Boolean sample) {
+			Division division, User user, Customer client, Boolean sample, String ordnum) {
 		super();
 		this.id = id;
 		this.user = user;
@@ -63,6 +64,7 @@ public class OutDoorOrder {
 		this.division = division;
 		this.client = client;
 		this.sample = sample;
+		this.ordnum = ordnum;
 	}
 
 	public OutDoorOrder(String id, String comment, Date date,  
@@ -182,6 +184,14 @@ public class OutDoorOrder {
 	public static OutDoorOrder orderReqToOrder(OutDoorOrderReq b) {
 		return new OutDoorOrder(b.getId(), b.getComment(), b.getDate(), b.getDate(), b.getDate(),
 				new Division(b.getDivision_code()), new User(Long.getLong(b.getUser_id())),
-				new Customer(b.getCustomer_id()), b.getSample());
+				new Customer(b.getCustomer_id()), b.getSample(), b.getOrdnum());
+	}
+
+	public String getOrdnum() {
+		return ordnum;
+	}
+
+	public void setOrdnum(String ordnum) {
+		this.ordnum = ordnum;
 	}
 }

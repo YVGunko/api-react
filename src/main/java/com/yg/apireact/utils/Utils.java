@@ -39,6 +39,34 @@ public class Utils {
 	    	      .toLocalDateTime();
 	    	}
 	//day
+   public static Date atStartOfDay(Date date) {
+	    LocalDateTime localDateTime = dateToLocalDateTime(date);
+	    LocalDateTime startOfDay = localDateTime.with(LocalTime.MIN);
+	    return localDateTimeToDate(startOfDay);
+	}
+
+	public static Date atEndOfDay(LocalDateTime localDateTime) {
+	    LocalDateTime endOfDay = localDateTime.with(LocalTime.MAX);
+	    return localDateTimeToDate(endOfDay);
+	}
+   public static Date atStartOfDay(LocalDateTime localDateTime) {
+	    LocalDateTime startOfDay = localDateTime.with(LocalTime.MIN);
+	    return localDateTimeToDate(startOfDay);
+	}
+
+	public static Date atEndOfDay(Date date) {
+	    LocalDateTime localDateTime = dateToLocalDateTime(date);
+	    LocalDateTime endOfDay = localDateTime.with(LocalTime.MAX);
+	    return localDateTimeToDate(endOfDay);
+	}
+	private static LocalDateTime dateToLocalDateTime(Date date) {
+	    return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+	}
+
+	private static Date localDateTimeToDate(LocalDateTime localDateTime) {
+	    return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+	}
+		
 	public static LocalDateTime startOfDay() {
 		return LocalDateTime.now(ZoneId.systemDefault()).with(LocalTime.MIN);}
 

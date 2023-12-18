@@ -1,10 +1,12 @@
 package com.yg.apireact.model.outDoorOrder;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -61,9 +63,12 @@ public class OutDoorOrderService {
 
 	public OutDoorOrderReq saveOrUpdate(OutDoorOrderReq request) throws Exception {
 
-		Customer customer = customerRepo.findById(request.customer_id).orElseThrow();
-		User user = userRepo.findById(Long.valueOf(request.user_id)).orElseThrow();
-		Division division = divisionRepo.findById(request.division_code).orElseThrow();
+		Customer customer = customerRepo.findById(request.customer_id)
+				.orElseThrow(() -> new NoSuchElementException("Customer not found exception with id="+request.customer_id));
+		User user = userRepo.findById(Long.valueOf(request.user_id))
+				.orElseThrow(() -> new NoSuchElementException("User not found exception with id="+request.user_id));
+		Division division = divisionRepo.findById(request.division_code)
+				.orElseThrow(() -> new NoSuchElementException("Division not found exception with id="+request.division_code));
 
 		String orderId = StringUtils.isBlank(request.id) ? getNextOrderNumber(request.customer_id) : request.id;
 
@@ -96,13 +101,22 @@ public class OutDoorOrderService {
 
 		model.put("rows", rowService.getRows(id));
 		model.put("orderNumber", id);
+		model.put("clientName", customer.getName());
 		model.put("orderDate", Utils.toStringOnlyDate(Utils.toLocalDate(ord.getDate())));
 		model.put("orderSample", ord.getSample() ? "Образцы." : "Серия.");
-
+		model.put("orderTotal", findTotal(id));
+		
 		mail.setProps(model);
 		emailService.sendEmail(mail, "mailOrder");
 
 		return (true);
+	}
+	public Object findTotal(String id) {
+		Long total = repo.getOrderTotal(id);
+		if (total == null)
+			return "";
+		else
+			return Long.toString(total);
 	}
 
 	public OutDoorOrderReq copy(OutDoorOrderReq request) throws Exception {
@@ -112,7 +126,7 @@ public class OutDoorOrderService {
 			OutDoorOrder dest = new OutDoorOrder(getNextOrderNumber(request.customer_id), request.getComment(),
 					request.getDate(), request.getDate(), request.getDate(), new Division(request.getDivision_code()),
 					new User(Long.valueOf(request.getUser_id())), new Customer(request.getCustomer_id()),
-					request.getSample());
+					request.getSample(), request.getOrdnum());
 
 			return saveOrUpdate(OutDoorOrderReq.orderToOrderReq(dest));
 		} catch (Exception e) {
@@ -130,9 +144,12 @@ public class OutDoorOrderService {
 		String usr;
 		String fil = null;
 		if (dateFrom == null)
-			dateFrom = Utils.toDate(Utils.startOfMonth());
+			dateFrom = Utils.atStartOfDay(Utils.startOfMonth());
 		if (dateTill == null)
-			dateTill = Utils.toDate(Utils.endOfMonth());
+			dateTill = Utils.atEndOfDay(Utils.endOfMonth());
+		
+		log.debug(String.valueOf(dateFrom));
+		
 		if (userId != null)
 			userRepo.findById(userId).orElseThrow(() -> new IllegalArgumentException(
 					"userId not found exception. userId=".concat(userId.toString())));
@@ -146,7 +163,9 @@ public class OutDoorOrderService {
 			customerRepo.findById(customer).orElseThrow(() -> new IllegalArgumentException(
 					"customer not found exception. customer=".concat(customer)));
 							
-		pageTuts = repo.find(dateFrom, dateTill, userId, fil, division, customer).orElseThrow();
+		pageTuts = repo.find(dateFrom, dateTill, userId, fil, division, customer);
+		
+		if (pageTuts == null) return responce;
 
 		for (OutDoorOrder b : pageTuts) {
 			if (StringUtils.isBlank(b.getDivision().getName()) || b.getDivision().getName().equals("...")) {
@@ -155,11 +174,11 @@ public class OutDoorOrderService {
 			} else div = b.getDivision().getName();
 			
 			if ( StringUtils.isBlank(b.getCustomer().getName()) || b.getCustomer().getName().equals("...")) {
-				cus = customerRepo.findById(b.getCustomer().getId()).orElseThrow(() -> new IllegalArgumentException(
-						"customer not found exception. customer=".concat(customer))).getName();			
+				cus = customerRepo.findById(b.getCustomer().getId())
+						.orElseGet(() -> new Customer(b.getCustomer().getId(), "Клиент не найден.")).getName();			
 			} else cus = b.getCustomer().getName();
 			
-			if (StringUtils.isBlank(b.getCustomer().getName()) || b.getCustomer().getName().equals("...")) {
+			if (StringUtils.isBlank(b.getUser().getName()) || b.getUser().getName().equals("...")) {
 				usr = userRepo.findById(b.getUser().getId()).orElseThrow(() -> new IllegalArgumentException(
 						"userId not found exception. userId=".concat(userId.toString()))).getName();
 			} else usr = b.getCustomer().getName();
@@ -167,7 +186,8 @@ public class OutDoorOrderService {
 			responce.add(new OutDoorOrderReq(b.getId(), b.getComment(),
 					rowService.getGoods(b.getId(), DETAILS_LENGTH), b.getCustomer().getId(),
 					cus, b.getDivision().getCode(), div,
-					String.valueOf(b.getUser().getId()), usr, b.getSample(), b.getDate()));
+					String.valueOf(b.getUser().getId()), usr, 
+					b.getSample(), b.getDate(), b.getOrdnum()));
 		}
 		
 		return responce;
